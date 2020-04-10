@@ -11,7 +11,7 @@ Analysis of Almond Survey results. This repository contains my survey dataset an
 
 <describe the purpose of this repository, the information it contains, and any relevant analysis goals. What, why, where, when, how?>
 
-The purpose of this repository is to provide a guideline for the Almond Survey Results and Analyses report. This repository contains the raw survey dataset along with processed datasets that were cleaned for clarity and ease of use.#for the specific analysis 
+The purpose of this repository is to provide a guideline for the Almond Survey Results and Analyses report. This repository contains the raw survey dataset along with processed datasets that were cleaned for specific analyses.  
 
 The analysis goals of the Almond Survey Results dataset are to examine the relationships between respondent demographics and cover crop adoption. Cover crop is one of several bee-friendly practices that can be implemented on almond orchards to protect and support managed honey bee health. Evaluating factors that may affect cover crop adoption will provide greater insight into the barriers almond producers and farm managers are facing regarding the implementation of bee-friendly practices on their farms. 
 
@@ -90,37 +90,37 @@ County                      | County the almond orchard(s) was located (Counties
                             |
 Regions                     | Region in which the county was located (Sacramento Valley, Delta,                               | San Joaquin Basin, Tulare Basin)
                             |
-Total Yield Bearing Acreage | Total amount of acreage with almonds that are mature enough to                                   produce nuts (total acres)
+Total Yield Bearing Acreage | Total amount of acreage with almonds that are mature enough to                                  | produce nuts (total acres)
                             |
-Pollinator Manager          | The person in charge of pollination management decisions (Farm                                   manager, owner, independent PCA, affiliated PCA, beekeeper,                                       beebroker, pesticide applicator)
+Pollinator Manager          | The person in charge of pollination management decisions (Farm                                  | manager, owner, independent PCA, affiliated PCA, beekeeper,                                     |  beebroker, pesticide applicator)
                             |
-Cover Crop Grown            | Whether or not the respondent has grown cover crop in the last 5                                 years (Yes or No)
+Cover Crop Grown            | Whether or not the respondent has grown cover crop in the last 5                                | years (Yes or No)
                             |
-Cover Crop Seeds            | Description of how the respondent acquired cover crop seed (Private                               cost-share program, CCA/PCA/Crop Consultant, Directly from seed                                  company, Federal cost-share program)
+Cover Crop Seeds            | Description of how the respondent acquired cover crop seed (Private                             | cost-share program, CCA/PCA/Crop Consultant, Directly from seed                                 |company, Federal cost-share program)
                             |
-Cover Crop Satisfaction     | Respondent's level of satisfaction with cover crop (Not satisfied,                               Somewhat satisfied, Very satisfied)
+Cover Crop Satisfaction     | Respondent's level of satisfaction with cover crop (Not satisfied,                              | Somewhat satisfied, Very satisfied)
                             |
-Cover Crop Interest         | Respondent's level of interest in planting cover crop if he/she had                               not grown cover crop in the last 5 years (Yes, No, Not sure)
+Cover Crop Interest         | Respondent's level of interest in planting cover crop if he/she had                             | not grown cover crop in the last 5 years (Yes, No, Not sure)
                             |
 Cover Crop Concerns         | Respondent's concerns with planting/maintaining cover crop
                             |
-Cover Crop Incentives       | Possible incentives that may assist respondent in planting cover                                  crop
+Cover Crop Incentives       | Possible incentives that may assist respondent in planting cover                                | crop
                             |
-Water Source                | The water source used to irrigate the respondent's almond                                         orchard(s) (Groundwater, Surface water, Combination of groundwater                                and surface water)
+Water Source                | The water source used to irrigate the respondent's almond                                       | orchard(s) (Groundwater, Surface water, Combination of groundwater                              | and surface water)
                             |
-PPH Grown                   | Whether or not the respondent has permanent pollinator habitat                                    around or near the almond orchard(s) (Yes, No, Not sure)
+PPH Grown                   | Whether or not the respondent has permanent pollinator habitat                                  | around or near the almond orchard(s) (Yes, No, Not sure)
                             |
-PPH Satisfaction            | Respondent's level of satisfaction with permanent pollinator                                     habitat (Not satisfied,Somewhat satisfied, Very satisfied)
+PPH Satisfaction            | Respondent's level of satisfaction with permanent pollinator                                    | habitat (Not satisfied,Somewhat satisfied, Very satisfied)
                             |
-PPH Interest                | Respondent's level of interest in planting permanent pollinator                                   habitat if he/she does not have the habitat around or near almond                                 orchard(s) (Yes, No, Not sure)
+PPH Interest                | Respondent's level of interest in planting permanent pollinator                                 | habitat if he/she does not have the habitat around or near almond                               | orchard(s) (Yes, No, Not sure)
                             |
-PPH Concerns                | Respondent's concerns with planting/maintaining permanent                                         pollinator habitat
+PPH Concerns                | Respondent's concerns with planting/maintaining permanent                                       |  pollinator habitat
                             |
-PPH Incentives              | Possible incentives that may assist respondent in planting                                        permanent pollinator habitat
+PPH Incentives              | Possible incentives that may assist respondent in planting                                      |  permanent pollinator habitat
                             |
-Pollination                 | How the respondent pollinated his/her almond orchard in 2019 (Our                                 orchards were not mature enough, We rented all our bees, We rented                               some bees and supplied some of our own, Prefer not to answer)
+Pollination                 | How the respondent pollinated his/her almond orchard in 2019 (Our                               | orchards were not mature enough, We rented all our bees, We rented                              | some bees and supplied some of our own, Prefer not to answer)
                             |
-Beekeeper Location          | Where the bee hives came from if the respondent rented honey bees                                in 2019 (Out of state, Near your orchard, California but not                                     neighboring county, Prefer not to answer)
+Beekeeper Location          | Where the bee hives came from if the respondent rented honey bees                               | in 2019 (Out of state, Near your orchard, California but not                                    | neighboring county, Prefer not to answer)
                             |
 Rental Price                | Highest rental fee/ per bee hive the respondent paid in 2019 ($)
                             |
