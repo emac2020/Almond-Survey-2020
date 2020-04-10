@@ -40,7 +40,7 @@ Email: emily.mcnamara@duke.edu
 
 ## Database Information
 
-This dataset contains response data from a survey that was distributed to almond producers and farm managers throughout California. The survey was launched on December 10th, 2019 and was closed on February 5th, 2020. Data were collected using Qualtrics.
+This dataset contains data of 301 completed responses from a survey that was distributed to almond producers and farm managers throughout California. The survey was launched on December 10th, 2019 and was closed on February 5th, 2020. Data were collected using Qualtrics.
 
 
 csv files were saved as 'Almond_Survey_Results_raw.csv', 'Almond_Survey_Data_Project_Processed.csv' , and 'Almond_Survey_Numeric_Answers_Processed.csv' 
@@ -54,14 +54,15 @@ Data/Processed: This folder contains datasets that were processed from the raw d
 
 Data/Raw: This folder contains the raw survey dataset as a csv file
 
-Output: This folder contains output information from the analyses #????
+Output: This folder contains output information from the analyses (visualizations produced from specific code files)
 
 Code: This folder contains the code used for the analyses
 
 
 <describe the formats of files for the various purposes contained in the repository>
 
-##What does this ^^ mean??
+all data files are in csv format
+code files are in rMarkdown or r script documents
 
 
 Files are named according to the following naming convention: `databasename_datatype_details_stage.format`, where: 
@@ -77,15 +78,13 @@ Files are named according to the following naming convention: `databasename_data
 **format** is a non-proprietary file format (e.g., .csv, .txt)
 
 
-## Metadata
+## Metadata (metadata is located in this file)
 
 ### Almond Survey Results Dataset
 Column                      | Description
 ----------------------------| -------------
 End Date                    | Date the respondent completed submitted the survey
-                            |
 Role in Operation           | Respondent's role in operation ('owner, not responsible for                                     | day-to-day management' , 'owner/operator', 'farm manager (not                                   | owner)')
-                            |
 County                      | County the almond orchard(s) was located (Counties in California)
                             |
 Regions                     | Region in which the county was located (Sacramento Valley, Delta,                               | San Joaquin Basin, Tulare Basin)
@@ -130,11 +129,13 @@ Age                         | The age range of the respondent
 
 <list any software scripts/code contained in the repository and a description of their purpose.>
 
+If have different code files. one called wrangling...
+Each individual file is called a script
+Don't have everything in project template (data processing)
+The file called Data Wrangling was used to process the data from raw form to processed form
+This specific visualization or analysis was used in this file...
+
 ## Quality assurance/quality control
 
-<describe any relevant QA/QC procedures taken with your data. Some ideas can be found here:>
-<https://www.dataone.org/best-practices/develop-quality-assurance-and-quality-control-plan>
-<https://www.dataone.org/best-practices/ensure-basic-quality-control>
-<https://www.dataone.org/best-practices/communicate-data-quality>
-<https://www.dataone.org/best-practices/identify-outliers>
-<https://www.dataone.org/best-practices/identify-values-are-estimated>
+For quality assurance and to ensure relevant responses from the survey, survey respondents had to be an almond producer or farm manager who farms one or more acres of almonds in California to qualify for the survey. Once the survey was closed, the dataset was filtered for 100% completed responses and responses 2.5 minutes and over for quality control purposes. The IP address column was then sorted to identify responses that had duplicate IP address. Responses with duplicate IP addresses were highlighted and then each of the responses were analyzed to determine whether or not the respondent had taken the survey more than once. If it was determined that a respondent had taken the survey more than once, all responses from that respondent were deleted. After the quality assurance/quality control process, there were 301 completed responses in the dataset.
+
