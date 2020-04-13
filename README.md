@@ -54,12 +54,13 @@ Output: This folder contains output information from the analyses and visualizat
 
 Code: This folder contains the code used for the analyses
 
+### File Formats
 
-<describe the formats of files for the various purposes contained in the repository>
+* All data files are in csv format
+* Code files are in R Markdown or R Script documents
 
-all data files are in csv format
-code files are in rMarkdown or r script documents
 
+### Naming Conventions
 
 Files are named according to the following naming convention: `databasename_datatype_details_stage.format`, where: 
 
@@ -74,7 +75,7 @@ Files are named according to the following naming convention: `databasename_data
 **format** is a non-proprietary file format (e.g., .csv, .txt)
 
 
-## Metadata (metadata is located in this file)
+## Metadata 
 
 ### Almond Survey Results Dataset
 Column                      | Description
