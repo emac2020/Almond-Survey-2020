@@ -25,8 +25,8 @@ The following research questions will inform the analysis goals:
 
 ## Investigators
 
-Emily McNamara, Duke University's Nicholas School of the Environment 
-Email: emily.mcnamara@duke.edu
+*Emily McNamara, Duke University's Nicholas School of the Environment 
+*Email: emily.mcnamara@duke.edu
 
 ## Keywords
 
