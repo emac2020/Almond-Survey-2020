@@ -11,7 +11,7 @@ Analysis of Almond Survey results. This repository contains a survey response da
 
 The purpose of this repository is to provide a guideline for the Almond Survey Results and Analyses report. This repository contains the raw survey dataset along with processed datasets that were cleaned for specific analyses.  
 
-The analysis goals of the Almond Survey Results dataset are to examine the relationships between respondent demographics and cover crop adoption. Cover crop is one of several bee-friendly practices that can be implemented on almond orchards to protect and support managed honey bee health. Evaluating factors that may affect cover crop adoption will provide greater insight into the barriers almond producers and farm managers are facing regarding the implementation of bee-friendly practices on their farms. 
+The analysis goal of the Almond Survey Results dataset is to examine the relationships between respondent demographics and cover crop adoption. Planting a cover crop is one of several bee-friendly practices that can be implemented on almond orchards to protect and support managed honey bee health. Evaluating factors that may affect cover crop adoption will provide greater insight into the barriers almond producers and farm managers are facing regarding the implementation of bee-friendly practices on their farms. 
 
 The following research questions will inform the analysis goals:
 
@@ -105,13 +105,9 @@ Age                         | The age range of the respondent
 
 ## Scripts and code
 
-<list any software scripts/code contained in the repository and a description of their purpose.>
 
-If have different code files. one called wrangling...
-Each individual file is called a script
-Don't have everything in project template (data processing)
-The file called Data Wrangling was used to process the data from raw form to processed form
-This specific visualization or analysis was used in this file...
+The file called Data Wrangling was used to process the data from raw form to processed form.
+
 
 ## Quality assurance/quality control
 
