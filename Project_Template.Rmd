@@ -5,9 +5,9 @@ output:
     fig_caption: yes
     number_sections: yes
 geometry: margin=2.54cm
-title: "Insert title of project here"
-subtitle: "Web address for GitHub repository"
-author: "Name"
+title: "Analysis of Factors Affecting Cover Crop Adoption on Almond Orchards in California "
+subtitle: "https://github.com/emac2020/Almond-Survey-2020-"
+author: "Emily McNamara"
 fontsize: 12pt
 mainfont: Times New Roman
 
@@ -54,14 +54,30 @@ theme_set(mytheme)
 
 # Load your datasets
 
+almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_raw.csv")
 
-almonds.project <- read.csv("./Data/Processed/Almond_Survey_Cleaned_Official_Data_Project.csv")
+almonds.project.CoverCrop <- read.csv("./Data/Processed/Almond_Project_CoverCrop_Processed.csv")
 
-almonds.numeric.project <- read.csv("./Data/Processed/Survey_numeric_answers_CLEANED.csv")
+
 ```
 
 
-# Rationale and Research Questions
+# 1. Rationale and Research Questions
+
+California is the epicenter of global almond production, producing 80% of the world's almond supply. As the forecasted growth of consumer demand shows few signs of subsiding, farmers in California are converting farmland to almond orchards at a considerable rate - from 428,000 acres in 1996 to 1,170,000 acres in 2019. However, the industry is in a precarious position as almonds require 100% pollination form managed honey bees - a species that has witnessed significant decline in population since 2006. The decline in managed honey bees is attributed to poor nutrition, lack of diverse forage, stress from transporation, and pesticide toxicity.
+
+To mitigate the decline in managed honey bees and protect honey bee health on almond orachards, experts determined several bee-friendly practices that growers can adopt on their farms. One of these practices is planting temporary forage called 'cover crop' between tree rows to increase the diversity and abundance of nutrient and pollen sources for the honey bees. 
+
+This study uses data from a survey administered to almond producers and farm managers throughout California to identify potential barriers in adopting cover crop and understand why the practice of planting cover crops is not widely adopted by almond producers. 
+
+To meet the research objectives, the primary research questions are:
+
+* Where are the respondents' almond orchards located?
+* Which demographic factors affect whether or not respondents have planted cover crop in the last 5 years?
+* How does region affect whether or not the respondents have planted cover crop in the last 5 years?
+* How does respondent role in the almond operation affect whether or not the respondents have planted cover crop in the last 5 years?
+* How does respondent age affect whether or not the respondents have planted cover crop in the last 5 years?
+* How does the size of the almond operation affect whether or not the respondents have planted cover crop in the last 5 years?
 ```{r, Research Questions}
 
 
@@ -69,9 +85,61 @@ almonds.numeric.project <- read.csv("./Data/Processed/Survey_numeric_answers_CLE
 
 \newpage
 
-# Dataset Information
+# 2. Dataset Information
+
+For the analysis, the following dataset was considered:
+
+## 2.1 Almond Survey Results Dataset
+
+This dataset contains data of 301 completed responses from a survey that was distributed to almond producers and farm managers throughout California. The survey was launched on December 10th, 2019 and was closed on February 5th, 2020. Data were collected using Qualtrics.
+
+The downloaded file was saved in the project folder path ./Data/Raw/Almond_Survey_Results_raw.csv on 2020-04-02 
+
+### 2.1.1 Data Content Information
+
+The dataset contains 24 columns, which are shown in Table 1. 
+
+Column                      | Description
+----------------------------| -------------
+End Date                    | Date the respondent completed submitted the survey
+Role in Operation           | Respondent's role in operation ('owner, not responsible for                                       | day-to-day management' , 'owner/operator', 'farm manager (not                                     | owner)')
+County                      | County the almond orchard(s) was located (Counties in California)
+Regions                     | Region in which the county was located (Sacramento Valley, Delta,                                 | San Joaquin Basin, Tulare Basin)
+Total Yield Bearing Acreage | Total amount of acreage with almonds that are mature enough to                                    | produce nuts (total acres)
+Pollinator Manager          | The person in charge of pollination management decisions (Farm                                    | manager, owner, independent PCA, affiliated PCA, beekeeper,                                       |  beebroker, pesticide applicator)
+Cover Crop Grown            | Whether or not the respondent has grown cover crop in the last 5                                  | years (Yes or No)
+Cover Crop Seeds            | Description of how the respondent acquired cover crop seed (Private                               | cost-share program, CCA/PCA/Crop Consultant, Directly from seed                                   | company, Federal cost-share program)
+Cover Crop Satisfaction     | Respondent's level of satisfaction with cover crop (Not satisfied,                                | Somewhat satisfied, Very satisfied)
+Cover Crop Interest         | Respondent's level of interest in planting cover crop if he/she had                               | not grown cover crop in the last 5 years (Yes, No, Not sure)
+Cover Crop Concerns         | Respondent's concerns with planting/maintaining cover crop
+Cover Crop Incentives       | Possible incentives that may assist respondent in planting cover                                  | crop
+Water Source                | The water source used to irrigate the respondent's almond                                         | orchard(s) (Groundwater, Surface water, Combination of groundwater                                | and surface water)
+PPH Grown                   | Whether or not the respondent has permanent pollinator habitat                                    | around or near the almond orchard(s) (Yes, No, Not sure)
+PPH Satisfaction            | Respondent's level of satisfaction with permanent pollinator                                      | habitat (Not satisfied,Somewhat satisfied, Very satisfied)
+PPH Interest                | Respondent's level of interest in planting permanent pollinator                                   | habitat if he/she does not have the habitat around or near almond                                 | orchard(s) (Yes, No, Not sure)
+PPH Concerns                | Respondent's concerns with planting/maintaining permanent                                         |  pollinator habitat
+PPH Incentives              | Possible incentives that may assist respondent in planting                                        |  permanent pollinator habitat
+Pollination                 | How the respondent pollinated his/her almond orchard in 2019 (Our                                 | orchards were not mature enough, We rented all our bees, We rented                                | some bees and supplied some of our own, Prefer not to answer)
+Beekeeper Location          | Where the bee hives came from if the respondent rented honey bees                                 | in 2019 (Out of state, Near your orchard, California but not                                      | neighboring county, Prefer not to answer)
+Rental Price                | Highest rental fee/ per bee hive the respondent paid in 2019 ($)
+Age                         | The age range of the respondent
 
 
+## 2.2. Almond Survey Numeric Results Dataset
+
+This dataset contains the same responses as the Almond Survey Results Dataset in section 2.1., but the dataset was downloaded from Qualtrics in numerical answer form with split-answer columns. 
+
+The downloaded file was saved in the project folder path ./Data/Raw/Almond_Survey_Numeric_Answers_raw.csv on 2020-04-02 
+
+### 2.2.1. Data Content Information
+
+
+
+
+
+## 2.3. Analyzed Data Structure
+
+An exploratory data analysis was conducted with this dataset for the study. The dataset was wrangled
 
 \newpage
 
@@ -85,7 +153,7 @@ almonds.numeric.project <- read.csv("./Data/Processed/Survey_numeric_answers_CLE
 
 
 
-## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed> THis part of analysis pertains to question 1, etc. (helps organize relevant info for final deliverable)
 
 ## Question 2: 
 

@@ -1,0 +1,28 @@
+---
+title: "Data Wrangling"
+author: "Emily McNamara"
+date: "4/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+setwd("~/Desktop/Almond Data Analytics Project 2020/Almond_Project_Data_Analytics")
+
+library(tidyverse)
+library(lubridate)
+library(plyr)
+```
+
+```{r, data wrangling}
+
+almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_raw.csv")
+
+colnames(almonds.project.raw)
+
+almonds.project.CoverCrop.processed <- almonds.project.raw %>%
+  select(Role.in.Operation:Regions, Total.Yield.Bearing.Acreage, Acre.Ranges, Cover.Crop.Grown:Cover.Crop.Incentives, Pollination:Age)
+
+```
+
