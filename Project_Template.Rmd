@@ -21,6 +21,12 @@ mainfont: Times New Roman
 \listoffigures 
 \newpage
 
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+
 ```{r setup, include=FALSE}
 
 
@@ -33,10 +39,11 @@ getwd()
 # Load your packages
 
 library(tidyverse)
+library(dplyr)
+library(lubridate)
 library(cowplot)
 library(viridis)
 library(RColorBrewer)
-library(colormap)
 library(ggplot2)
 library(nlme)
 library(nnet)
@@ -54,15 +61,15 @@ theme_set(mytheme)
 
 # Load your datasets
 
-almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_raw.csv")
+almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_Raw.csv")
 
-almonds.project.CoverCrop <- read.csv("./Data/Processed/Almond_Project_CoverCrop_Processed.csv")
+almonds.numeric.raw <- read.csv("./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv")
 
 
 ```
 
 
-# 1. Rationale and Research Questions
+# Rationale and Research Questions
 
 California is the epicenter of global almond production, producing 80% of the world's almond supply. As the forecasted growth of consumer demand shows few signs of subsiding, farmers in California are converting farmland to almond orchards at a considerable rate - from 428,000 acres in 1996 to 1,170,000 acres in 2019. However, the industry is in a precarious position as almonds require 100% pollination form managed honey bees - a species that has witnessed significant decline in population since 2006. The decline in managed honey bees is attributed to poor nutrition, lack of diverse forage, stress from transporation, and pesticide toxicity.
 
@@ -78,26 +85,25 @@ To meet the research objectives, the primary research questions are:
 * How does respondent role in the almond operation affect whether or not the respondents have planted cover crop in the last 5 years?
 * How does respondent age affect whether or not the respondents have planted cover crop in the last 5 years?
 * How does the size of the almond operation affect whether or not the respondents have planted cover crop in the last 5 years?
-```{r, Research Questions}
 
-
-```
 
 \newpage
 
-# 2. Dataset Information
+# Dataset Information
 
-For the analysis, the following dataset was considered:
+For the analysis, the following dataset was used:
 
-## 2.1 Almond Survey Results Dataset
+## Almond Survey Results Dataset
 
 This dataset contains data of 301 completed responses from a survey that was distributed to almond producers and farm managers throughout California. The survey was launched on December 10th, 2019 and was closed on February 5th, 2020. Data were collected using Qualtrics.
 
 The downloaded file was saved in the project folder path ./Data/Raw/Almond_Survey_Results_raw.csv on 2020-04-02 
 
-### 2.1.1 Data Content Information
+### Data Content Information
 
 The dataset contains 24 columns, which are shown in Table 1. 
+
+#### Table 1: Almond Survey Response Dataset Content Information
 
 Column                      | Description
 ----------------------------| -------------
@@ -106,7 +112,7 @@ Role in Operation           | Respondent's role in operation ('owner, not respon
 County                      | County the almond orchard(s) was located (Counties in California)
 Regions                     | Region in which the county was located (Sacramento Valley, Delta,                                 | San Joaquin Basin, Tulare Basin)
 Total Yield Bearing Acreage | Total amount of acreage with almonds that are mature enough to                                    | produce nuts (total acres)
-Pollinator Manager          | The person in charge of pollination management decisions (Farm                                    | manager, owner, independent PCA, affiliated PCA, beekeeper,                                       |  beebroker, pesticide applicator)
+Pollinator Manager          | The person in charge of pollination management decisions (Farm                                    | manager, owner, independent PCA, affiliated PCA, beekeeper,                                       | beebroker, pesticide applicator)
 Cover Crop Grown            | Whether or not the respondent has grown cover crop in the last 5                                  | years (Yes or No)
 Cover Crop Seeds            | Description of how the respondent acquired cover crop seed (Private                               | cost-share program, CCA/PCA/Crop Consultant, Directly from seed                                   | company, Federal cost-share program)
 Cover Crop Satisfaction     | Respondent's level of satisfaction with cover crop (Not satisfied,                                | Somewhat satisfied, Very satisfied)
@@ -125,25 +131,295 @@ Rental Price                | Highest rental fee/ per bee hive the respondent pa
 Age                         | The age range of the respondent
 
 
-## 2.2. Almond Survey Numeric Results Dataset
+## Almond Survey Numeric Results Dataset
 
 This dataset contains the same responses as the Almond Survey Results Dataset in section 2.1., but the dataset was downloaded from Qualtrics in numerical answer form with split-answer columns. 
 
-The downloaded file was saved in the project folder path ./Data/Raw/Almond_Survey_Numeric_Answers_raw.csv on 2020-04-02 
+The downloaded file was saved in the project folder path ./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv on 2020-04-02 
 
-### 2.2.1. Data Content Information
+### Data Content Information
+
+#### Table 1: Almond Survey Numeric Response Dataset Content Information
+
+The dataset contains 48 columns, which are shown in Table 2. 
+
+Column                                      | Description
+--------------------------------------------| -------------
+End Date                                    | Date the respondent completed submitted the survey
+Role in Operation                           | Respondent's role in operation ('owner, not                                                       | responsible for day-to-day management',                                                           | 'owner/operator', 'farm manager (not owner)')
+Regions                                     | Region in which the county was located (Sacramento                                                | Valley, Delta, San Joaquin Basin, Tulare Basin)
+Tehama                                      | County in California
+Butte                                       | County in California
+Glenn                                       | County in California
+Colusa                                      | County in California
+Yuba                                        | County in California
+Sutter                                      | County in California
+Yolo                                        | County in California
+Solano                                      | County in California
+San Joaquin                                 | County in California
+Stanislaus                                  | County in California
+Madera                                      | County in California
+Merced                                      | County in California
+Fresno                                      | County in California
+Kings                                       | County in California
+Tulare                                      | County in California
+Kern                                        | County in California
+Sacramento                                  | County in California
+Total Yield Bearing Acreage                 | Total amount of acreage with almonds that are mature                                              | enough to produce nuts (total acres)
+Cover Crop Grown                            | Whether or not the respondent has grown cover crop in                                             | the last 5 years (Yes or No)
+Cover Crop Satisfaction                     | Respondent's level of satisfaction with cover crop                                                |  (Not satisfied, Somewhat satisfied, Very satisfied)
+Cover Crop Interest                         | Respondent's level of interest in planting cover crop                                             | if he/she had not grown cover crop in the last 5 years                                             | (Yes, No, Not sure)
+ConcernCC_WaterAvailability                 | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_WaterExpense                      | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_IrrigationSystem                  | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_EffortTime                        | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_Labor                             | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_EquipmentCost                     | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_EquipmentAvailability             | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_SeedCost                          | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_SoilType                          | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_FrostDamage                       | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_SupportPest                       | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_CompetingOperations               | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_PhysicalInterference              | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_NoConcern                         | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_PreferNotAnswer                   | Answer choice for respondent concern for growing cover                                             | crop
+FutureIncentivesCC_AssociatedNonPollination | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_DecreasedRentalFee       | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_FedCostShare             | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_PrivateCostShare         | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_Equipment                | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_BeeStrength              | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_None                     | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_PreferNotAnswer          | Answer choice for incentive to grow cover crop
+Age                                         | Respondent age
 
 
 
+## Naming Conventions and File Formats
 
+The files are named according to the following convention: Files are named according to the following naming convention: `databasename_datatype_details_stage.format`, where: 
 
-## 2.3. Analyzed Data Structure
+**databasename** refers to the database from where the data originated
 
-An exploratory data analysis was conducted with this dataset for the study. The dataset was wrangled
+**datatype** is a description of data 
+
+**details** are additional descriptive details, particularly important for processed data 
+
+**stage**refers to the stage in data management pipelines (e.g., raw, cleaned, or processed)
+
+**format** is a non-proprietary file format (e.g., .csv, .txt)
 
 \newpage
 
-# Exploratory Analysis 
+
+# Exploratory Analysis and Wrangling
+
+## Data Wrangling: Almond Survey Response Dataset
+
+The raw 'Almond Survey Response Dataset' and the 'Almond Survey Numeric Response Dataset' both contained unnecessary information for the overarching goals of this project. Thus, data regarding permanent pollinator habitat, the pollination manager, non-yield bearing acreage, and water sources was removed. The dates the respondents completed the survey were removed as well because the analyses do not involve 'time' as a parameter. 
+
+```{r, Data Wrangling}
+
+
+# Read in raw almond survey response data
+almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_Raw.csv")
+
+# Look at column names
+#colnames(almonds.project.raw)
+
+# Select column names that only apply to cover crop analysis
+
+almonds.project.CC.processed <- almonds.project.raw %>%
+  dplyr::select(Role.in.Operation:Regions, Total.Yield.Bearing.Acreage, Acre.Ranges, Cover.Crop.Grown:Cover.Crop.Incentives, Pollination:Age)
+
+
+# Fill all empty cells in almonds.project.CC.processed with 'NA' and name 'almonds.CC'
+almonds.CC <- almonds.project.CC.processed %>% mutate_all(na_if, "")
+
+
+# Save new processed dataset
+#write.csv(almonds.CC, row.names = FALSE, file = "./Data/Processed/Almond_Project_CoverCrop_Processed.csv")
+
+
+
+```
+
+
+## Data Wrangling: Almond Survey Numeric Response Dataset
+```{r}
+
+# Read in almond survey numeric response data
+almonds.numeric.raw <- read.csv("./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv")
+
+
+# Look at column names
+#colnames(almonds.numeric.raw)
+
+# Choose columns for cover crop analyses that require numeric data
+
+almonds.numeric <- almonds.numeric.raw %>%
+  dplyr::select(Role.in.Operation, Regions, Total.Yield.Bearing, Cover.Crop.Grown, Age)
+
+# Save new processed dataset
+#write.csv(almonds.numeric, row.names = FALSE, file = #"./Data/Processed/Almond_Survey_Numeric_Answers_Processed.csv")
+
+
+```
+
+The raw datasets now only contain data regarding respondents responses to cover crop adoption and interest as well as the respondents' answers to the demographic and pollination questions in the survey. 
+
+## Data Exploration
+
+After wrangling the data into a format that would allow me to answer my research questions more effectively, I was able to explore the processed datasets.
+
+```{r, data exploration, eval = FALSE, echo = TRUE}
+
+# Column names of both datasets
+colnames(almonds.CC)
+
+colnames(almonds.numeric)
+
+# Structure of datasets
+
+str(almonds.CC)
+
+str(almonds.numeric)
+
+# Class
+
+class(almonds.CC$Total.Yield.Bearing.Acreage)
+class(almonds.CC$Regions)
+
+class(almonds.numeric$Total.Yield.Bearing)
+class(almonds.numeric$Role.in.Operation)
+
+# Dimensions of datasets
+
+dim(almonds.CC)
+
+dim(almonds.numeric)
+
+# Head
+
+head(almonds.CC)
+
+head(almonds.numeric)
+
+# Summary
+
+summary(almonds.CC)
+summary(almonds.CC$Regions)
+summary(almonds.CC$Role.in.Operation)
+summary(almonds.CC$Age)
+summary(almonds.CC$Total.Yield.Bearing.Acreage)
+summary(almonds.CC$Acre.Ranges)
+summary(almonds.CC$Rental.Price)
+
+summary(almonds.numeric)
+summary(almonds.numeric$Regions)
+summary(almonds.numeric$Total.Yield.Bearing)
+```
+
+**Figure 1** plots the locations of the respondent's almonds orchards by county in Califorina.Because respondents were allowed to "check all that apply," when selecting the counties where their almond orchards are located, some of the location responses in the dataset had several counties listed in one cell. To remedy this, I first created a new column in the dataset Excel spreadsheet called "County.Multiple," then I copied the data from the "County" column into the new column and entered in "multiple" for location responses that contained more than one county. Thus, in **Figure 1**, "multiple" is used to describe the respondents who had almond orchards in several counties. This figure shows that a majority of the respondents farm almonds in Stanislaus, Madera, and Fresno. Since a majority of almond producers are from Southern California, I anticipated a higher response rate from these counties.
+
+I then went through the spreadsheet again and noted that in the location responses that had multiple counties listed, the counties were close to one another and therefore, the counties could be categorized by Central Valley watershed basins. I chose to categorize the counties by watersheds provided the fact that the production of tree nuts requires a considerable amount of water, and due to the state's water scarcity, water is a critical factor in determining managerial practices for farmers. Thus, I hypothesized that watershed basins are most representative of respondent behavior toward bee-friendly practices (i.e. cover crop).
+
+The regional categories include Sacramento Valley, Delta, San Joaquin Basin, and Tulare Basin. The Sacramento Valley consists of respondents who farm almonds in Butte, Colusa, Glenn, or Tehama; the Delta region includes Sacramento, Solano, Yolo, and Yuba; the San Joaquin Basin includes San Joaquin, Stanislaus, Merced, and Madera; the Tulare Basin includes Tulare, Kings, Kern, and Fresno. 
+
+**Figure 2** plots the location of the respondents' almond orchards by region. We can see from this plot that a majority of the respondents farm almonds in the San Joaquin and Tulare Basins. It is important to note that the northern section of the Central Valley consists of the Sacramento Valley and Delta regions, while the southern section includes the San Joaquin and Tulare Basins. Therefore, a majority of the respondents farm almonds in the southern section of the Central Valley.
+
+```{r, location plots, eval = TRUE, echo = FALSE}
+
+# Figure 1: Location by county
+
+# Drop the row that does not contain any location information in the County.Multiple column 
+
+almonds.CC.dropNAcounty <- almonds.CC %>% drop_na(County.Multiple)
+
+# Plot location of almond orchards by county
+
+OrchardLocation <- ggplot(almonds.CC.dropNAcounty, aes(x = County.Multiple)) + 
+  ggtitle("Figure 1: Location of Respondents' Almond Orchards by County in California") +
+  geom_bar(fill = "#56B4E9") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "County", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(OrchardLocation)
+
+# Figure 2: Location by region
+
+# Drop the row that does not contain any location information in the County.Multiple column 
+
+almonds.CC.dropNAregion <- almonds.CC %>% drop_na(Regions)
+
+# Plot location of almond orchards by region using the original almond.CC raw dataset
+
+OrchardRegion <- ggplot(almonds.CC.dropNAregion, aes(x = Regions)) + 
+  ggtitle("Figure 2: Location of Respondents' Almond Orchards by Region in California") +
+  geom_bar(fill = "blue") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Regions", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(OrchardRegion)
+
+
+```
+
+
+**Figure 3** shows the age ranges of the respondents who completed the survey. We can see from this plot that a majority of the respondents fell within the 25-34 and 55-64-year-old age ranges. These age ranges are interesting to note because the responses for cover crop adoption and interest will be come from both the newer and older farming generations.
+
+
+```{r, respondent age, eval = TRUE, echo = FALSE}
+
+Age.plot <- ggplot(almonds.CC, aes(x = Age)) + 
+  ggtitle("Figure 3: Age Ranges of Respondents") +
+  geom_bar(fill = "darkgreen") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Age", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(Age.plot)
+
+
+```
+
+
+**Figure 4** plots the respondents' roles in almond operations. The respondents could select "Owner, not responsible for dat-to-day management," "Owner/Operator," or "Farm Manager (not owner)." This figure shows that a majority of the respondents selected "Owner/Operator," meaning they own and operate their almond orchard(s). This outcome was the opposite of my hypothesis regarding the roles the survey takers play in day-to-day operations because I assumed that a majority of the farms would consist of several parcels that were operated by farm managers and that farm managers would constitute the majority of survey respondents.
+
+```{r, Role in Operation, eval = TRUE, echo = FALSE}
+
+# Figure 4: plot of Respondents' roles in almond operations
+
+Role.plot <- ggplot(almonds.CC, aes(x = Role.in.Operation)) + 
+  ggtitle("Figure 4: Respondents' Roles in Almond Operations") +
+  geom_bar(fill = "#D55E00") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Role in Operation", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(Role.plot)
+
+
+```
 
 
 
@@ -151,11 +427,84 @@ An exploratory data analysis was conducted with this dataset for the study. The 
 
 # Analysis
 
+## Question 1: Which demographic factors affect whether or not respondents have planted cover crop in the last 5 years?
+
+```{r, Question 1: factors affecting cover crop grown}
+
+# Statistical Test 1: Which factors affect whether or not a respondent has grown cover crop in the last 5 years?
+
+almonds.CC$Total.Yield.Bearing.Acreage <- as.numeric(almonds.CC$Total.Yield.Bearing.Acreage)
+
+Grown.CC <- glm(Cover.Crop.Grown ~ as.factor(Regions) + as.factor(Role.in.Operation) + as.factor(Age)
+               + Total.Yield.Bearing.Acreage, almonds.CC, family = binomial )
+
+summary(Grown.CC)
+
+summary.table.GrownCC <- coef(summary(Grown.CC))
+
+exp(1.826489) # Odds of respondent in San Joaquin Basin selecting "yes" are 6.21 less than Delta
+exp(2.146542) # Odds of respondent in Tulare selecting "yes" are 8.56 less than Delta
 
 
-## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed> THis part of analysis pertains to question 1, etc. (helps organize relevant info for final deliverable)
+```
 
-## Question 2: 
+
+## Question 2: How does the respondent's role in the operation affect whether or not they have grown cover crop in the last 5 years?
+
+```{r, role in operation}
+
+Role.Grown.CC <- glm(Cover.Crop.Grown~ Role.in.Operation, almonds.CC, family = binomial)
+
+summary(Role.Grown.CC)
+
+
+# Chi-square
+
+almonds.numeric$Role.in.Operation <- as.factor(almonds.numeric$Role.in.Operation)
+almonds.numeric$Cover.Crop.Grown <- as.factor(almonds.numeric$Cover.Crop.Grown)
+
+
+
+Role.Grown.CC.tbl = table(almonds.numeric$Role.in.Operatio, almonds.numeric$Cover.Crop.Grown) 
+Role.Grown.CC.tbl
+
+chisq.test(Role.Grown.CC.tbl)
+
+
+```
+
+### Figure 5: Respondent's Role in the Operation by Cover Crop Grown
+
+```{r}
+
+alm.Role= almonds.CC[almonds.CC$Role.in.Operation != " " ,]
+
+role.count.CC <- data.frame(table(data.frame(alm.Role$Role.in.Operation, alm.Role$Cover.Crop.Grown)))
+
+role.count.CC
+
+Role.Grown.CC.plot <- ggplot(role.count.CC, aes(x = alm.Role.Role.in.Operation, y = Freq, fill = alm.Role.Cover.Crop.Grown)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", size = 12)) +
+  #scale_fill_brewer(palette = "Paired") +
+  scale_fill_manual(values = c("darkblue", "#009E73")) +
+  labs(x = "Role in Operation", y = "Count", fill = "Grown Cover Crop") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 12), legend.title = element_text(size = 12))
+
+print(Role.Grown.CC.plot)
+```
+
+## Question 3: How does the respondent's age affect whether or not they have grown cover crop in the last 5 years?
+
+
+
+## Question 4: How does the size of the respondent's almond opperation affect whether or not they have grown cover crop in the last 5 years?
+
+
+## Question 5: How does the region where the respondent's farm almonds affect whether or not they have grown cover crop in the last 5 years?
+
 
 
 
@@ -169,3 +518,5 @@ An exploratory data analysis was conducted with this dataset for the study. The 
 
 # References
 <add references here if relevant, otherwise delete this section> 
+
+* United States Department of Agriculture (USDA). (2019). 2018 California Almond Acreage Report. California Department of Food and Agriculture. Retrieved from https://www.nass.usda.gov/Statistics_by_State/California/Publications/Specialty_and_Other_Releases/Almond/Acreage/201904almac.pdf

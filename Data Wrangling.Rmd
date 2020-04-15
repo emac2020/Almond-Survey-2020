@@ -24,5 +24,13 @@ colnames(almonds.project.raw)
 almonds.project.CoverCrop.processed <- almonds.project.raw %>%
   select(Role.in.Operation:Regions, Total.Yield.Bearing.Acreage, Acre.Ranges, Cover.Crop.Grown:Cover.Crop.Incentives, Pollination:Age)
 
+write.csv(almonds.project.CoverCrop.processed, row.names = FALSE, file = "./Data/Processed/Almond_Project_CoverCrop_Processed.csv")
+
+
+
+almonds.project <- read.csv("./Data/Processed/Almond_Survey_Data_Project_Processed.csv")
+
+almonds.numeric.project <- read.csv("./Data/Processed/Almond_Survey_Numeric_Answers_Processed.csv")
+
 ```
 
