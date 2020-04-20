@@ -411,11 +411,16 @@ kable(pretty_GrownCC.glm,caption = "Cover Crop Adoption by Respondent Demographi
 
 To analyze how the respondent's "role in operation" affects whether or not they have grown a cover crop, I first made a plot to visualize the number of farm managers, owners, and owner/operators who have and have not grown cover crop in the last five years. **Figure 5** illustrates that the majority of respondents owned and operated their almond operation, and a majority of them have not grown cover crop. 
 
+
+```{r}
+alm.Role= almonds.CC[almonds.CC$Role.in.Operation != " " ,]
+```
+
+\FloatBarrier
+
 ```{r, Question 2 Plot, eval = TRUE, echo = FALSE, fig.cap= "Respondents' Roles in Almond Operations by Cover Crop Grown" }
 
 # Plot: Role in Operation by CC Grown 
-
-alm.Role= almonds.CC[almonds.CC$Role.in.Operation != " " ,]
 
 role.count.CC <- data.frame(table(data.frame(alm.Role$Role.in.Operation, alm.Role$Cover.Crop.Grown)))
 
@@ -460,7 +465,7 @@ chisq.test(Role.Grown.CC.tbl)
 
 ## Question 3: How does the respondent's age affect whether or not they have grown cover crop in the last 5 years?
 
-I first plotted the age of respondents by whether or not they have grown a cover crop to visualize the relationship between the two variables. **Figure 6** shows that respondents between 55-64-years-old had the highest frequency of growing cover crop in the last five years, while respondents between 25-34-years-old had the highest frequency of **not** growing cover crop in the last five years. The higher rate of respondents between 25-34-years-old not having grown cover crop may be due to the fact that they have just purchased the almond orchards or are farm managers, whereas the older generation has most likely been farming for a longer period of time. However, I hypothesize that a greater number of respondents between 25-34-years-old would be interested in growing cover crop than older respondents.
+I first plotted the age of respondents by whether or not they have grown a cover crop to visualize the relationship between the two variables. The first graph in **Figure 6** shows that respondents between 55-64-years-old had the highest frequency of growing cover crop in the last five years, while respondents between 25-34-years-old had the highest frequency of **not** growing cover crop in the last five years. The higher rate of respondents between 25-34-years-old not having grown cover crop may be due to the fact that they have just purchased the almond orchards or are farm managers, whereas the older generation has most likely been farming for a longer period of time. However, I hypothesize that a greater number of respondents between 25-34-years-old would be interested in growing cover crop than older respondents.
 
 ```{r, age plot 1, echo = FALSE, fig.cap = "Respondent's Age by Cover Crop Grown", out.width = '90%'}
 
@@ -481,19 +486,14 @@ Age.GrownCC.plot <- ggplot(age.GrownCC, aes(x = Age, y = Freq, fill = Cover.Crop
   ylim(0, 60) +
   #scale_fill_brewer(palette = "Set1") +
   scale_fill_manual(values = c("red", "blue")) +
-  labs(x = "Age", y = "Count", fill = "Grown CC") +
+  labs(x = "Age", y = "Count", fill = "Grown Cover Crop") +
   theme(legend.position = "right", 
         legend.text = element_text(size = 7), legend.title = element_text(size = 8))
-print(Age.GrownCC.plot)
+#print(Age.GrownCC.plot)
 
 ```
 
-\FloatBarrier
-
-\newpage
-
-To test my hypothesis that respondents between 24-35-years-old I plotted the age of the respondent by their interest in growing cover crop. **Figure 7** shows that my hypothesis was correct and that more respondents from the 25-34 age bracket would be interested in planting cover crop than the older respondents. 
-
+To test my hypothesis that respondents between 24-35-years-old I plotted the age of the respondent by their *interest* in growing cover crop. It is important to note that the question regarding *interest* in growing cover crop only appeared for those who selected *no* to having grown cover crop in the last 5 years. Thus, the total count in this analysis is lower than that of the cover crop *grown* analysis. However, out of the respondents who have not grown cover crop, the bottom graph in **Figure 6** shows that my hypothesis was correct and that more respondents from the 25-34 age bracket would be interested in planting cover crop than the older respondents. 
 
 ```{r, Age plot 2, echo = FALSE, fig.cap = "Respondent's Age by Cover Crop Interest", out.width = '90%'}
 
@@ -518,15 +518,13 @@ Age.InterestCC.plot <- ggplot(age.InterestCC, aes(x = Age, y = Freq, fill = Cove
   ylim(0,23) +
   #scale_fill_brewer(palette = "Set1") +
   scale_fill_manual(values = c("red", "#E69F00" , "blue")) +
-  labs(x = "Age", y = "Count", fill = "Interest in Growing CC") +
+  labs(x = "Age", y = "Count", fill = "Interest in Growing Cover Crop") +
   theme(legend.position = "right", 
         legend.text = element_text(size = 7), legend.title = element_text(size = 8))
-print(Age.InterestCC.plot)
-
-
+#print(Age.InterestCC.plot)
 ```
 
-\FloatBarrier
+
 
 ```{r, combined age graphs, fig.cap = "Respondent's Age by Cover Crop Grown and Cover Crop Interest", out.width = '90%' }
 # Create cowplot
@@ -559,6 +557,11 @@ kable(pretty_Age.GrownCC.glm,caption = "Cover Crop Adoption by Age Ranges of Res
       align = c("l", rep("r", 3)),format = "latex", booktabs = TRUE)  %>%
   kable_styling(latex_options = "scale_down")
 
+```
+
+\FloatBarrier
+
+```{r, Question 3.1, warning = FALSE}
 
 # Statistical Test 2: Chi-Square
 
@@ -577,13 +580,11 @@ To assess the effect "size of operation" has on cover crop adoption, I used the 
 
 I then categorized the individual text entries for "total yield-bearing acreage" by "Small," "Medium," and "Large" to represent the size of the operation. The acreage range within each category was determined by the ALmond Board's almond acre ranges for farm sizes. The "Small" category represented producers with 0-40 acres of yield-bearing almonds, "Medium" represented producers with 41-200 acres and "Large" represented producers with 201+ acres. 
 
-To visualize the relationship between the size of the respondent's almond operation and whether or not they have grown cover crop, I plotted the two variables. **Figure 9** shows that "Small" operations had the highest frequency of **not** growing cover crop in the last five years. 
+To visualize the relationship between the size of the respondent's almond operation and whether or not they have grown cover crop, I plotted the two variables. **Figure 7** shows that "Small" operations had the highest frequency of **not** growing cover crop in the last five years. 
 
-```{r, eval = TRUE, echo = FALSE}
+```{r }
 
 alm.Size = almonds.CC[almonds.CC$Acre.Ranges != " " ,]
-
-
 
 ```
 
@@ -670,6 +671,7 @@ pretty_Region.GrownCC <- prettify(summary(Regions.GrownCC.glm))
 kable(pretty_Region.GrownCC,caption = "Cover Crop Adoption by Region", 
       align = c("l", rep("r", 3)),format = "latex", booktabs = TRUE)  %>%
   kable_styling(latex_options = "scale_down")
+
 
 ```
 

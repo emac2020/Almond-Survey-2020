@@ -656,6 +656,14 @@ not grown cover crop in the last five years. \textbf{Figure 5}
 illustrates that the majority of respondents owned and operated their
 almond operation, and a majority of them have not grown cover crop.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alm.Role=}\StringTok{ }\NormalTok{almonds.CC[almonds.CC}\OperatorTok{$}\NormalTok{Role.in.Operation }\OperatorTok{!=}\StringTok{ " "}\NormalTok{ ,]}
+\end{Highlighting}
+\end{Shaded}
+
+\FloatBarrier
+
   \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
   \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
   \providecommand{\huxtpad}[1]{\rule{0pt}{\baselineskip+#1}}
@@ -788,16 +796,16 @@ years?}\label{question-3-how-does-the-respondents-age-affect-whether-or-not-they
 
 I first plotted the age of respondents by whether or not they have grown
 a cover crop to visualize the relationship between the two variables.
-\textbf{Figure 6} shows that respondents between 55-64-years-old had the
-highest frequency of growing cover crop in the last five years, while
-respondents between 25-34-years-old had the highest frequency of
-\textbf{not} growing cover crop in the last five years. The higher rate
-of respondents between 25-34-years-old not having grown cover crop may
-be due to the fact that they have just purchased the almond orchards or
-are farm managers, whereas the older generation has most likely been
-farming for a longer period of time. However, I hypothesize that a
-greater number of respondents between 25-34-years-old would be
-interested in growing cover crop than older respondents.
+The first graph in \textbf{Figure 6} shows that respondents between
+55-64-years-old had the highest frequency of growing cover crop in the
+last five years, while respondents between 25-34-years-old had the
+highest frequency of \textbf{not} growing cover crop in the last five
+years. The higher rate of respondents between 25-34-years-old not having
+grown cover crop may be due to the fact that they have just purchased
+the almond orchards or are farm managers, whereas the older generation
+has most likely been farming for a longer period of time. However, I
+hypothesize that a greater number of respondents between 25-34-years-old
+would be interested in growing cover crop than older respondents.
 
   \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
   \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
@@ -951,19 +959,19 @@ interested in growing cover crop than older respondents.
 \end{tabularx}\end{threeparttable}
 \par\end{raggedright}
 
-\end{table}\begin{figure}
-\includegraphics[width=0.9\linewidth]{Project_Template_files/figure-latex/age plot 1-1} \caption{Respondent's Age by Cover Crop Grown}\label{fig:age plot 1}
-\end{figure}
-
-\FloatBarrier
-
-\newpage
+\end{table}
 
 To test my hypothesis that respondents between 24-35-years-old I plotted
-the age of the respondent by their interest in growing cover crop.
-\textbf{Figure 7} shows that my hypothesis was correct and that more
-respondents from the 25-34 age bracket would be interested in planting
-cover crop than the older respondents.
+the age of the respondent by their \emph{interest} in growing cover
+crop. It is important to note that the question regarding
+\emph{interest} in growing cover crop only appeared for those who
+selected \emph{no} to having grown cover crop in the last 5 years. Thus,
+the total count in this analysis is lower than that of the cover crop
+\emph{grown} analysis. However, out of the respondents who have not
+grown cover crop, the bottom graph in \textbf{Figure 6} shows that my
+hypothesis was correct and that more respondents from the 25-34 age
+bracket would be interested in planting cover crop than the older
+respondents.
 
   \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
   \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
@@ -1181,11 +1189,7 @@ cover crop than the older respondents.
 \end{tabularx}\end{threeparttable}
 \par\end{raggedright}
 
-\end{table}\begin{figure}
-\includegraphics[width=0.9\linewidth]{Project_Template_files/figure-latex/Age plot 2-1} \caption{Respondent's Age by Cover Crop Interest}\label{fig:Age plot 2}
-\end{figure}
-
-\FloatBarrier
+\end{table}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1316,6 +1320,8 @@ Age: Prefer not to answer & -13.3133048 & 0.0000017 & NA & 1.388545e+28 & 624.19
 \end{tabular}}
 \end{table}
 
+\FloatBarrier
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Statistical Test 2: Chi-Square}
@@ -1380,6 +1386,12 @@ almond operation and whether or not they have grown cover crop, I
 plotted the two variables. \textbf{Figure 9} shows that ``Small''
 operations had the highest frequency of \textbf{not} growing cover crop
 in the last five years.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alm.Size =}\StringTok{ }\NormalTok{almonds.CC[almonds.CC}\OperatorTok{$}\NormalTok{Acre.Ranges }\OperatorTok{!=}\StringTok{ " "}\NormalTok{ ,]}
+\end{Highlighting}
+\end{Shaded}
 
   \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
   \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
