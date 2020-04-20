@@ -1,0 +1,136 @@
+---
+title: "Age Figure"
+author: "Emily McNamara"
+date: "4/20/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(viridis)
+library(ggplot2)
+library(cowplot)
+library(knitr)
+```
+
+```{r}
+
+
+# Read in raw almond survey response data
+almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_Raw.csv")
+
+# Look at column names
+#colnames(almonds.project.raw)
+
+# Select column names that only apply to cover crop analysis
+
+almonds.project.CC.processed <- almonds.project.raw %>%
+  dplyr::select(Role.in.Operation:Regions, 
+                Total.Yield.Bearing.Acreage, Acre.Ranges, 
+                Cover.Crop.Grown:Cover.Crop.Incentives, Pollination:Age)
+
+
+# Fill all empty cells in almonds.project.CC.processed with 'NA'
+# Name 'almonds.CC'
+almonds.CC <- almonds.project.CC.processed %>% mutate_all(na_if, "")
+
+
+
+
+
+
+
+
+almAge= almonds.CC[almonds.CC$Age != " " ,]
+
+age.GrownCC <- data.frame(table(data.frame(almAge$Age, almAge$Cover.Crop.Grown)))
+
+age.GrownCC
+
+colnames(age.GrownCC) <- c("Age", "Cover.Crop.Grown", "Freq")
+
+Age.GrownCC.plot <- ggplot(age.GrownCC, aes(x = Age, y = Freq, fill = Cover.Crop.Grown)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0, 60) +
+  #scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Age", y = "Count", fill = "Grown Cover Crop") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 7), legend.title = element_text(size = 8))
+#print(Age.GrownCC.plot)
+
+
+
+
+
+
+alm = almonds.CC[almonds.CC$Age != " ", ]
+
+age.InterestCC <- data.frame(table(data.frame(alm$Age, alm$Cover.Crop.Interest)))
+
+age.InterestCC[age.InterestCC == ""] <- NA
+
+age.InterestCC <- age.InterestCC[complete.cases(age.InterestCC), ]
+
+age.InterestCC 
+
+colnames(age.InterestCC) <- c("Age", "Cover.Crop.Interest", "Freq")
+
+Age.InterestCC.plot <- ggplot(age.InterestCC, aes(x = Age, y = Freq, fill = Cover.Crop.Interest)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0,23) +
+  #scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = c("red", "#E69F00" , "blue")) +
+  labs(x = "Age", y = "Count", fill = "Interest in Growing Cover Crop") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 7), legend.title = element_text(size = 8))
+#print(Age.InterestCC.plot)
+
+
+```
+
+```{r, fig.cap= "Number of survey respondents who have planted cover crop in the last five years (top graph) versus the number of survey respondents who are interested in planting cover crop (bottom), by age range. Note: the question regarding *interest* in growing cover crop only appeared for those who selected *no* to having grown cover crop in the last 5 years. Thus, the total count in this analysis is lower than that of the cover crop *grown* analysis."}
+
+CC.Age.plots2 <- plot_grid(Age.GrownCC.plot, Age.InterestCC.plot, 
+                          align = "v", ncol = 1)
+
+print(CC.Age.plots2) 
+```
+```{r}
+alm.Region = almonds.CC[almonds.CC$Regions != " ", ]
+
+Region.GrownCC <- data.frame(table(data.frame(alm$Regions, alm$Cover.Crop.Grown)))
+
+#Region.GrownCC[Region.GrownCC == ""] <- NA
+
+#Region.GrownCC <- Region.GrownCC[complete.cases(Region.GrownCC), ]
+
+Region.GrownCC
+
+
+
+Region.GrownCC.plot <- ggplot(Region.GrownCC, aes(x = alm.Regions, y = Freq, fill = alm.Cover.Crop.Grown)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0,200) +
+  #scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Region", y = "Count", fill = "Grown Cover Crop") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 7), legend.title = element_text(size = 8))
+print(Region.GrownCC.plot)
+```
+```
+
+
