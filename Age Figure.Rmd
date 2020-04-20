@@ -99,7 +99,7 @@ Age.InterestCC.plot <- ggplot(age.InterestCC, aes(x = Age, y = Freq, fill = Cove
 
 ```
 
-```{r, fig.cap= "Number of survey respondents who have planted cover crop in the last five years (top graph) versus the number of survey respondents who are interested in planting cover crop (bottom), by age range. Note: the question regarding *interest* in growing cover crop only appeared for those who selected *no* to having grown cover crop in the last 5 years. Thus, the total count in this analysis is lower than that of the cover crop *grown* analysis."}
+```{r, fig.cap= "Number of survey respondents (almond producers in CA) who have planted cover crop in the last five years (top graph) versus the number of respondents who are interested in planting cover crop (bottom), by age range. Respondents between 25-34 years old may have recently acquired land or do not own the land they farm which might explain the greater number who have not grown cover crop. However, these respondents are more interested in planting cover crop than respondents from older age groups. Note: the question regarding *interest* in growing cover crop only appeared for those who selected *no* to having grown cover crop in the last 5 years. Thus, the total count in this analysis is lower than that of the cover crop *grown* analysis. "}
 
 CC.Age.plots2 <- plot_grid(Age.GrownCC.plot, Age.InterestCC.plot, 
                           align = "v", ncol = 1)
