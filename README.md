@@ -41,7 +41,7 @@ The following research questions will inform the analysis goals:
 This dataset contains data of 301 completed responses from a survey that was distributed to almond producers and farm managers throughout California. The survey was launched on December 10th, 2019 and was closed on February 5th, 2020. Data were collected using Qualtrics.
 
 
-csv files were saved as 'Almond_Survey_Results_raw.csv', 'Almond_Survey_Data_Project_Processed.csv' , and 'Almond_Survey_Numeric_Answers_Processed.csv' 
+csv files were saved as 'Almond_Survey_Results_raw.csv' and 'Almond_Survey_Numeric_Answers_Raw.csv'
 
 
 ## Folder structure, file formats, and naming conventions 
@@ -102,6 +102,61 @@ Pollination                 | How the respondent pollinated his/her almond orcha
 Beekeeper Location          | Where the bee hives came from if the respondent rented honey bees                               | in 2019 (Out of state, Near your orchard, California but not                                    | neighboring county, Prefer not to answer)
 Rental Price                | Highest rental fee/ per bee hive the respondent paid in 2019 ($)
 Age                         | The age range of the respondent
+
+
+### Almond Survey Numeric Response Dataset Content Information
+
+Column                                      | Description
+--------------------------------------------| -------------
+End Date                                    | Date the respondent completed submitted the survey
+Role in Operation                           | Respondent's role in operation ('owner, not                                                       | responsible for day-to-day management',                                                           | 'owner/operator', 'farm manager (not owner)')
+Regions                                     | Region in which the county was located (Sacramento                                                | Valley, Delta, San Joaquin Basin, Tulare Basin)
+Tehama                                      | County in California
+Butte                                       | County in California
+Glenn                                       | County in California
+Colusa                                      | County in California
+Yuba                                        | County in California
+Sutter                                      | County in California
+Yolo                                        | County in California
+Solano                                      | County in California
+San Joaquin                                 | County in California
+Stanislaus                                  | County in California
+Madera                                      | County in California
+Merced                                      | County in California
+Fresno                                      | County in California
+Kings                                       | County in California
+Tulare                                      | County in California
+Kern                                        | County in California
+Sacramento                                  | County in California
+Total Yield Bearing Acreage                 | Total amount of acreage with almonds that are mature                                              | enough to produce nuts (total acres)
+Cover Crop Grown                            | Whether or not the respondent has grown cover crop in                                             | the last 5 years (Yes or No)
+Cover Crop Satisfaction                     | Respondent's level of satisfaction with cover crop                                                |  (Not satisfied, Somewhat satisfied, Very satisfied)
+Cover Crop Interest                         | Respondent's level of interest in planting cover crop                                             | if he/she had not grown cover crop in the last 5 years                                             | (Yes, No, Not sure)
+ConcernCC_WaterAvailability                 | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_WaterExpense                      | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_IrrigationSystem                  | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_EffortTime                        | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_Labor                             | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_EquipmentCost                     | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_EquipmentAvailability             | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_SeedCost                          | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_SoilType                          | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_FrostDamage                       | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_SupportPest                       | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_CompetingOperations               | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_PhysicalInterference              | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_NoConcern                         | Answer choice for respondent concern for growing cover                                             | crop
+ConcernCC_PreferNotAnswer                   | Answer choice for respondent concern for growing cover                                             | crop
+FutureIncentivesCC_AssociatedNonPollination | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_DecreasedRentalFee       | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_FedCostShare             | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_PrivateCostShare         | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_Equipment                | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_BeeStrength              | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_None                     | Answer choice for incentive to grow cover crop
+FutureIncentivesCC_PreferNotAnswer          | Answer choice for incentive to grow cover crop
+Age                                         | Respondent age
+
 
 ## Scripts and code
 
