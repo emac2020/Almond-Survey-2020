@@ -202,7 +202,7 @@ To meet the research objectives, the primary research questions are:
 
 \section{Dataset Information}\label{dataset-information}
 
-For the analysis, the following dataset was used:
+For the analysis, the following datasets were used:
 
 \subsection{Almond Survey Results
 Dataset}\label{almond-survey-results-dataset}
@@ -448,8 +448,7 @@ respondents farm almonds in the southern section of the Central Valley.
 the survey. We can see from this plot that a majority of the respondents
 fell within the 25-34 and 55-64-year-old age ranges. These age ranges
 are interesting to note because the responses for cover crop adoption
-and interest will be come from both the newer and older farming
-generations.
+will be come from both the newer and older farming generations.
 
 \begin{figure}
 \centering
@@ -595,9 +594,6 @@ Total.Yield.Bearing.Acreage & -0.01 & 0.00 & -1.97 & 0.05\\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#kable(CC) %>% kable_styling(latex_options = "scale_down")}
-
-
 \CommentTok{# Table 1}
 
 \NormalTok{pretty_GrownCC.glm <-}\StringTok{ }\KeywordTok{prettify}\NormalTok{(}\KeywordTok{summary}\NormalTok{(Grown.CC))}
@@ -796,7 +792,7 @@ years?}\label{question-3-how-does-the-respondents-age-affect-whether-or-not-they
 
 I first plotted the age of respondents by whether or not they have grown
 a cover crop to visualize the relationship between the two variables.
-The first graph in \textbf{Figure 6} shows that respondents between
+Graph ``a'' in \textbf{Figure 6} shows that respondents between
 55-64-years-old had the highest frequency of growing cover crop in the
 last five years, while respondents between 25-34-years-old had the
 highest frequency of \textbf{not} growing cover crop in the last five
@@ -961,17 +957,17 @@ would be interested in growing cover crop than older respondents.
 
 \end{table}
 
-To test my hypothesis that respondents between 24-35-years-old I plotted
-the age of the respondent by their \emph{interest} in growing cover
+To test my hypothesis that respondents between 24-35-years-old are more
+interested in planting cover crop than the older respondents, I plotted
+the age of the respondents by their \emph{interest} in growing cover
 crop. It is important to note that the question regarding
 \emph{interest} in growing cover crop only appeared for those who
 selected \emph{no} to having grown cover crop in the last 5 years. Thus,
 the total count in this analysis is lower than that of the cover crop
-\emph{grown} analysis. However, out of the respondents who have not
-grown cover crop, the bottom graph in \textbf{Figure 6} shows that my
-hypothesis was correct and that more respondents from the 25-34 age
-bracket would be interested in planting cover crop than the older
-respondents.
+\emph{grown} analysis. Out of the respondents who have not grown cover
+crop, graph ``b'' in \textbf{Figure 6} shows that my hypothesis was
+correct and that more respondents from the 25-34 age bracket are
+interested in planting cover crop than the older respondents.
 
   \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
   \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
@@ -1195,8 +1191,11 @@ respondents.
 \begin{Highlighting}[]
 \CommentTok{# Create cowplot}
 
-\NormalTok{CC.Age.plots <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(Age.GrownCC.plot, Age.InterestCC.plot, }
-                          \DataTypeTok{align =} \StringTok{"v"}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{)}
+\NormalTok{CC.Age.plots <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(Age.GrownCC.plot, Age.InterestCC.plot, }\DataTypeTok{scale =} \FloatTok{0.9}\NormalTok{,}
+                          \DataTypeTok{align =} \StringTok{"v"}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{, }
+                          \DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{'a) Cover Crop Grown'}\NormalTok{, }\StringTok{'b) Cover Crop Interest'}\NormalTok{), }
+                          \DataTypeTok{label_x =} \DecValTok{0}\NormalTok{, }\DataTypeTok{label_y =} \DecValTok{0}\NormalTok{,}
+  \DataTypeTok{hjust =} \OperatorTok{-}\FloatTok{0.0}\NormalTok{, }\DataTypeTok{vjust =} \OperatorTok{-}\FloatTok{0.0}\NormalTok{, }\DataTypeTok{label_size =} \DecValTok{8}\NormalTok{)}
 
 \KeywordTok{print}\NormalTok{(CC.Age.plots) }
 \end{Highlighting}
@@ -1383,7 +1382,7 @@ represented producers with 201+ acres.
 
 To visualize the relationship between the size of the respondent's
 almond operation and whether or not they have grown cover crop, I
-plotted the two variables. \textbf{Figure 9} shows that ``Small''
+plotted the two variables. \textbf{Figure 7} shows that ``Small''
 operations had the highest frequency of \textbf{not} growing cover crop
 in the last five years.
 
@@ -1718,6 +1717,41 @@ Regions: Tulare Basin & -1.9136493 & 0.1475410 & 0.0469245 & 0.4165938 & 0.54964
 \newpage
 
 \section{Summary and Conclusions}\label{summary-and-conclusions}
+
+When controlling for all factors that potentially affect cover crop
+adoption, the analyses show that only ``Region'' and ``Total
+Yield-Bearing Acreage'' have a significant relationship regarding
+whether or not respondents selected ``Yes'' to having grown cover crop
+in the last 5 years. However, when the factors are analyzed individually
+against ``cover crop adoption,'' the models indicate that only
+``Region'' is significant. Upon further analysis, the results also
+showed that respondents who farm almonds in the San Joaquin and Tulare
+Basins were significantly less likely to select ``Yes'' to having grown
+cover crop than respondents in the more northern regions of the
+Sacramento Valley and Delta. One explanation for this could be due to
+water availability and price. The northern regions in California have a
+greater supply of water than those farther south and given the
+considerable amount of water used to grow tree crops, it could be that
+farmers in the southern regions are more apprehensive about planting
+cover crops due to the extra water they necessitate. This being said,
+cover crops improve soil health and the soil's water retention
+capabilities, so by planting cover crop, the farmers could enhance their
+irrigation efficiency.
+
+Cover crop is just one of several bee-friendly practices that almond
+producers can adopt on their orchards. However, it is an important
+practice as it provides managed honey bees with extra and more diverse
+nutrient and pollen sources. By planting a cover crop, producers could
+not only improve their soil health but could also strengthen the bee
+colonies and obtain better pollination of their almond orchards. As the
+demand for almonds continues to increase, more acres of farmland will
+transition to almond orchards, and without higher rates of adoption of
+bee-friendly practices or a shift in consumer mindset, a continued loss
+of managed honey bees in the US appears inevitable. Thus, given the
+results from these analyses, industry experts, cost-share programs, and
+farm extension agents should work with producers in the southern region
+of the state to assist them in funding and educational opportunities
+that increase the rates of cover crop adoption.
 
 \newpage
 

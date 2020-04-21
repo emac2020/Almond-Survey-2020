@@ -100,7 +100,7 @@ To meet the research objectives, the primary research questions are:
 
 # Dataset Information
 
-For the analysis, the following dataset was used:
+For the analysis, the following datasets were used:
 
 ## Almond Survey Results Dataset
 
@@ -116,7 +116,8 @@ The dataset contains 24 columns. See the report's README for Almond Survey Resul
 
 This dataset contains the same responses as the Almond Survey Results Dataset in section 2.1., but the dataset was downloaded from Qualtrics in numerical answer form with split-answer columns. 
 
-The downloaded file was saved in the project folder path ./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv on 2020-04-02 
+The downloaded file was saved in the project folder path
+./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv on 2020-04-02 
 
 ### Data Content Information
 
@@ -318,7 +319,7 @@ print(OrchardRegion)
 
 \newpage
 
-**Figure 3** shows the age ranges of the respondents who completed the survey. We can see from this plot that a majority of the respondents fell within the 25-34 and 55-64-year-old age ranges. These age ranges are interesting to note because the responses for cover crop adoption and interest will be come from both the newer and older farming generations.
+**Figure 3** shows the age ranges of the respondents who completed the survey. We can see from this plot that a majority of the respondents fell within the 25-34 and 55-64-year-old age ranges. These age ranges are interesting to note because the responses for cover crop adoption will be come from both the newer and older farming generations.
 
 
 ```{r, respondent age, eval = TRUE, echo = FALSE, fig.cap= "Age Ranges of Respondents"}
@@ -392,8 +393,6 @@ Grown.CC <- glm(Cover.Crop.Grown ~ as.factor(Regions) +
 
 summ(Grown.CC, model.fit = getOption("Grown.CC", TRUE))
 
-#kable(CC) %>% kable_styling(latex_options = "scale_down")
-
 
 # Table 1
 
@@ -422,11 +421,14 @@ alm.Role= almonds.CC[almonds.CC$Role.in.Operation != " " ,]
 
 # Plot: Role in Operation by CC Grown 
 
+## Create dataframe to add 'frequency'
 role.count.CC <- data.frame(table(data.frame(alm.Role$Role.in.Operation, alm.Role$Cover.Crop.Grown)))
 
 role.count.CC
 
 colnames(role.count.CC) <- c("Role.in.Operation", "Cover.Crop.Grown", "Freq")
+
+# Plot
 
 Role.Grown.CC.plot <- ggplot(role.count.CC, aes(x = Role.in.Operation, y = Freq, fill = Cover.Crop.Grown)) +
   geom_bar(stat = "identity", position = position_dodge()) +
@@ -465,11 +467,13 @@ chisq.test(Role.Grown.CC.tbl)
 
 ## Question 3: How does the respondent's age affect whether or not they have grown cover crop in the last 5 years?
 
-I first plotted the age of respondents by whether or not they have grown a cover crop to visualize the relationship between the two variables. The first graph in **Figure 6** shows that respondents between 55-64-years-old had the highest frequency of growing cover crop in the last five years, while respondents between 25-34-years-old had the highest frequency of **not** growing cover crop in the last five years. The higher rate of respondents between 25-34-years-old not having grown cover crop may be due to the fact that they have just purchased the almond orchards or are farm managers, whereas the older generation has most likely been farming for a longer period of time. However, I hypothesize that a greater number of respondents between 25-34-years-old would be interested in growing cover crop than older respondents.
+I first plotted the age of respondents by whether or not they have grown a cover crop to visualize the relationship between the two variables. Graph "a" in **Figure 6** shows that respondents between 55-64-years-old had the highest frequency of growing cover crop in the last five years, while respondents between 25-34-years-old had the highest frequency of **not** growing cover crop in the last five years. The higher rate of respondents between 25-34-years-old not having grown cover crop may be due to the fact that they have just purchased the almond orchards or are farm managers, whereas the older generation has most likely been farming for a longer period of time. However, I hypothesize that a greater number of respondents between 25-34-years-old would be interested in growing cover crop than older respondents.
 
 ```{r, age plot 1, echo = FALSE, fig.cap = "Respondent's Age by Cover Crop Grown", out.width = '90%'}
 
 # Plot 1: Age by Cover Crop Grown
+
+## Create dataframe to add 'frequency'
 
 almAge= almonds.CC[almonds.CC$Age != " " ,]
 
@@ -479,12 +483,13 @@ age.GrownCC
 
 colnames(age.GrownCC) <- c("Age", "Cover.Crop.Grown", "Freq")
 
+# Plot
+
 Age.GrownCC.plot <- ggplot(age.GrownCC, aes(x = Age, y = Freq, fill = Cover.Crop.Grown)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylim(0, 60) +
-  #scale_fill_brewer(palette = "Set1") +
   scale_fill_manual(values = c("red", "blue")) +
   labs(x = "Age", y = "Count", fill = "Grown Cover Crop") +
   theme(legend.position = "right", 
@@ -493,11 +498,13 @@ Age.GrownCC.plot <- ggplot(age.GrownCC, aes(x = Age, y = Freq, fill = Cover.Crop
 
 ```
 
-To test my hypothesis that respondents between 24-35-years-old I plotted the age of the respondent by their *interest* in growing cover crop. It is important to note that the question regarding *interest* in growing cover crop only appeared for those who selected *no* to having grown cover crop in the last 5 years. Thus, the total count in this analysis is lower than that of the cover crop *grown* analysis. However, out of the respondents who have not grown cover crop, the bottom graph in **Figure 6** shows that my hypothesis was correct and that more respondents from the 25-34 age bracket would be interested in planting cover crop than the older respondents. 
+To test my hypothesis that respondents between 24-35-years-old are more interested in planting cover crop than the older respondents, I plotted the age of the respondents by their *interest* in growing cover crop. It is important to note that the question regarding *interest* in growing cover crop only appeared for those who selected *no* to having grown cover crop in the last 5 years. Thus, the total count in this analysis is lower than that of the cover crop *grown* analysis. Out of the respondents who have not grown cover crop, graph "b" in **Figure 6** shows that my hypothesis was correct and that more respondents from the 25-34 age bracket are interested in planting cover crop than the older respondents. 
 
 ```{r, Age plot 2, echo = FALSE, fig.cap = "Respondent's Age by Cover Crop Interest", out.width = '90%'}
 
 # Plot 2: Age by Cover Crop Interest
+
+## Create dataframe to add 'frequency'
 
 alm = almonds.CC[almonds.CC$Age != " ", ]
 
@@ -511,12 +518,13 @@ age.InterestCC
 
 colnames(age.InterestCC) <- c("Age", "Cover.Crop.Interest", "Freq")
 
+# Plot
+
 Age.InterestCC.plot <- ggplot(age.InterestCC, aes(x = Age, y = Freq, fill = Cover.Crop.Interest)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylim(0,23) +
-  #scale_fill_brewer(palette = "Set1") +
   scale_fill_manual(values = c("red", "#E69F00" , "blue")) +
   labs(x = "Age", y = "Count", fill = "Interest in Growing Cover Crop") +
   theme(legend.position = "right", 
@@ -529,8 +537,11 @@ Age.InterestCC.plot <- ggplot(age.InterestCC, aes(x = Age, y = Freq, fill = Cove
 ```{r, combined age graphs, fig.cap = "Respondent's Age by Cover Crop Grown and Cover Crop Interest", out.width = '90%' }
 # Create cowplot
 
-CC.Age.plots <- plot_grid(Age.GrownCC.plot, Age.InterestCC.plot, 
-                          align = "v", ncol = 1)
+CC.Age.plots <- plot_grid(Age.GrownCC.plot, Age.InterestCC.plot, scale = 0.9,
+                          align = "v", ncol = 1, 
+                          labels = c('a) Cover Crop Grown', 'b) Cover Crop Interest'), 
+                          label_x = 0, label_y = 0,
+  hjust = -0.0, vjust = -0.0, label_size = 8)
 
 print(CC.Age.plots) 
 ```
@@ -590,6 +601,8 @@ alm.Size = almonds.CC[almonds.CC$Acre.Ranges != " " ,]
 
 ```{r, Size plot,  echo = FALSE, fig.cap = "Size of Operation by Cover Crop Interest", out.width = '90%' }
 
+## Create dataframe to add 'frequency'
+
 Size.CCgrown <- data.frame(table(data.frame(alm.Size$Acre.Ranges, alm.Size$Cover.Crop.Grown)))
 
 
@@ -600,6 +613,8 @@ Size.CCgrown  <- Size.CCgrown [complete.cases(Size.CCgrown ), ]
 Size.CCgrown 
 
 colnames(Size.CCgrown) <- c("Acre.Ranges", "Cover.Crop.Grown", "Freq")
+
+# Plot 
 
 FarmSize.GrownCC.plot <- 
   ggplot(Size.CCgrown, aes(x = Acre.Ranges, y = Freq, fill = Cover.Crop.Grown)) +
@@ -679,6 +694,10 @@ kable(pretty_Region.GrownCC,caption = "Cover Crop Adoption by Region",
 \newpage
 
 # Summary and Conclusions
+
+When controlling for all factors that potentially affect cover crop adoption, the analyses show that only "Region" and "Total Yield-Bearing Acreage" have a significant relationship regarding whether or not respondents selected "Yes" to having grown cover crop in the last 5 years. However, when the factors are analyzed individually against "cover crop adoption," the models indicate that only "Region" is significant. Upon further analysis, the results also showed that respondents who farm almonds in the San Joaquin and Tulare Basins were significantly less likely to select "Yes" to having grown cover crop than respondents in the more northern regions of the Sacramento Valley and Delta. One explanation for this could be due to water availability and price. The northern regions in California have a greater supply of water than those farther south and given the considerable amount of water used to grow tree crops, it could be that farmers in the southern regions are more apprehensive about planting cover crops due to the extra water they necessitate. This being said, cover crops improve soil health and the soil's water retention capabilities, so by planting cover crop, the farmers could enhance their irrigation efficiency.
+
+Cover crop is just one of several bee-friendly practices that almond producers can adopt on their orchards. However, it is an important practice as it provides managed honey bees with extra and more diverse nutrient and pollen sources. By planting a cover crop, producers could not only improve their soil health but could also strengthen the bee colonies and obtain better pollination of their almond orchards. As the demand for almonds continues to increase, more acres of farmland will transition to almond orchards, and without higher rates of adoption of bee-friendly practices or a shift in consumer mindset, a continued loss of managed honey bees in the US appears inevitable. Thus, given the results from these analyses, industry experts, cost-share programs, and farm extension agents should work with producers in the southern region of the state to assist them in funding and educational opportunities that increase the rates of cover crop adoption. 
 
 
 \newpage
