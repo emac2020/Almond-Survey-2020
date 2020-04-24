@@ -1,0 +1,709 @@
+---
+output: 
+  pdf_document:
+    keep_tex: yes
+    fig_caption: yes
+    number_sections: yes
+header-includes: 
+- \usepackage{placeins}
+geometry: margin=2.0cm
+title: "Analysis of Factors Affecting Cover Crop Adoption on Almond Orchards in California"
+subtitle: "https://github.com/emac2020/Almond-Survey-2020"
+author: "Emily McNamara"
+fontsize: 12pt
+mainfont: Times New Roman
+
+---
+
+\newpage
+\tableofcontents 
+\newpage
+\listoftables 
+\newpage
+\listoffigures 
+\newpage
+
+
+```{r, echo=FALSE}
+library(knitr)
+knitr::opts_chunk$set(error = TRUE)
+
+```
+
+
+```{r setup, include=FALSE}
+
+
+# Set your working directory
+
+setwd("~/Desktop/Almond Data Analytics Project 2020/Almond_Project_Data_Analytics")
+
+getwd()
+
+# Load your packages
+
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(viridis)
+library(ggplot2)
+library(cowplot)
+library(nlme)
+library(nnet)
+library(MASS) 
+library(lme4)
+library(boot)
+library(finalfit)
+library(rstan)
+library(papeR)
+library(knitr)
+library(kableExtra)
+library(jtools)
+library(huxtable)
+
+# Set your ggplot theme
+
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+theme_set(mytheme)
+
+# Load your datasets
+
+almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_Raw.csv")
+
+almonds.numeric.raw <- read.csv("./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv")
+
+
+```
+
+
+# Rationale and Research Questions
+
+California is the epicenter of global almond production, producing 80% of the world's almond supply. As the forecasted growth of consumer demand shows few signs of subsiding, farmers in California are converting farmland to almond orchards at a considerable rate - from 428,000 acres in 1996 to 1,170,000 acres in 2019. However, the industry is in a precarious position as almonds require 100% pollination form managed honey bees - a species that has witnessed significant decline in population since 2006. The decline in managed honey bees is attributed to poor nutrition, lack of diverse forage, stress from transporation, and pesticide toxicity.
+
+To mitigate the decline in managed honey bees and protect honey bee health on almond orachards, experts determined several bee-friendly practices that growers can adopt on their farms. One of these practices is planting temporary forage called 'cover crop' between tree rows to increase the diversity and abundance of nutrient and pollen sources for the honey bees. 
+
+This study uses data from a survey administered to almond producers and farm managers throughout California to identify potential barriers in adopting cover crop and understand why the practice of planting cover crops is not widely adopted by almond producers. 
+
+To meet the research objectives, the primary research questions are:
+
+* Where are the respondents' almond orchards located?
+* Which demographic factors affect whether or not respondents have planted cover crop in the last 5 years?
+* How does region affect whether or not the respondents have planted cover crop in the last 5 years?
+* How does respondent role in the almond operation affect whether or not the respondents have planted cover crop in the last 5 years?
+* How does respondent age affect whether or not the respondents have planted cover crop in the last 5 years?
+* How does the size of the almond operation affect whether or not the respondents have planted cover crop in the last 5 years?
+
+
+\newpage
+
+# Dataset Information
+
+For the analysis, the following datasets were used:
+
+## Almond Survey Results Dataset
+
+This dataset contains data of 301 completed responses from a survey that was distributed to almond producers and farm managers throughout California. The survey was launched on December 10th, 2019 and was closed on February 5th, 2020. Data were collected using Qualtrics.
+
+The downloaded file was saved in the project folder path ./Data/Raw/Almond_Survey_Results_raw.csv on 2020-04-02 
+
+### Data Content Information
+
+The dataset contains 24 columns. See the report's README for Almond Survey Results Dataset: Column Names and Descriptions.
+
+## Almond Survey Numeric Results Dataset
+
+This dataset contains the same responses as the Almond Survey Results Dataset in section 2.1., but the dataset was downloaded from Qualtrics in numerical answer form with split-answer columns. 
+
+The downloaded file was saved in the project folder path
+./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv on 2020-04-02 
+
+### Data Content Information
+
+#### Table 1: Almond Survey Numeric Response Dataset Content Information
+
+The dataset contains 48 columns. See the report's README for Almond Survey Numeric Response Dataset: Column Names and Descriptions.
+
+## Naming Conventions and File Formats
+
+The files are named according to the following convention: Files are named according to the following naming convention: `databasename_datatype_details_stage.format`, where: 
+
+**databasename** refers to the database from where the data originated
+
+**datatype** is a description of data 
+
+**details** are additional descriptive details, particularly important for processed data 
+
+**stage**refers to the stage in data management pipelines (e.g., raw, cleaned, or processed)
+
+**format** is a non-proprietary file format (e.g., .csv, .txt)
+
+\newpage
+
+
+# Exploratory Analysis and Wrangling
+
+## Data Wrangling: Almond Survey Response Dataset
+
+The raw 'Almond Survey Response Dataset' and the 'Almond Survey Numeric Response Dataset' both contained unnecessary information for the overarching goals of this project. Thus, data regarding permanent pollinator habitat, the pollination manager, non-yield bearing acreage, and water sources was removed. The dates the respondents completed the survey were removed as well because the analyses do not involve 'time' as a parameter. 
+
+```{r, Data Wrangling}
+
+
+# Read in raw almond survey response data
+almonds.project.raw <- read.csv("./Data/Raw/Almond_Survey_Results_Raw.csv")
+
+# Look at column names
+#colnames(almonds.project.raw)
+
+# Select column names that only apply to cover crop analysis
+
+almonds.project.CC.processed <- almonds.project.raw %>%
+  dplyr::select(Role.in.Operation:Regions, 
+                Total.Yield.Bearing.Acreage, Acre.Ranges, 
+                Cover.Crop.Grown:Cover.Crop.Incentives, Pollination:Age)
+
+
+# Fill all empty cells in almonds.project.CC.processed with 'NA'
+# Name 'almonds.CC'
+almonds.CC <- almonds.project.CC.processed %>% mutate_all(na_if, "")
+
+
+# Save new processed dataset
+#write.csv(almonds.CC, row.names = FALSE, 
+#file = "./Data/Processed/Almond_Project_CoverCrop_Processed.csv")
+
+
+
+```
+
+
+## Data Wrangling: Almond Survey Numeric Response Dataset
+```{r}
+
+# Read in almond survey numeric response data
+almonds.numeric.raw <- read.csv("./Data/Raw/Almond_Survey_Numeric_Answers_Raw.csv")
+
+
+# Look at column names
+#colnames(almonds.numeric.raw)
+
+# Choose columns for cover crop analyses that require numeric data
+
+almonds.numeric <- almonds.numeric.raw %>%
+  dplyr::select(Role.in.Operation, Regions, Total.Yield.Bearing, Cover.Crop.Grown, Age)
+
+# Save new processed dataset
+#write.csv(almonds.numeric, row.names = FALSE, 
+#file = "./Data/Processed/Almond_Survey_Numeric_Answers_Processed.csv")
+
+
+```
+
+The raw datasets now only contain data regarding respondents responses to cover crop adoption and interest as well as the respondents' answers to the demographic and pollination questions in the survey. 
+
+## Data Exploration
+
+After wrangling the data into a format that would allow me to answer my research questions more effectively, I was able to explore the processed datasets.
+
+```{r, data exploration, eval = FALSE, echo = TRUE}
+
+# Column names of both datasets
+colnames(almonds.CC)
+
+colnames(almonds.numeric)
+
+# Structure of datasets
+
+str(almonds.CC)
+
+str(almonds.numeric)
+
+# Class
+
+class(almonds.CC$Total.Yield.Bearing.Acreage)
+class(almonds.CC$Regions)
+
+class(almonds.numeric$Total.Yield.Bearing)
+class(almonds.numeric$Role.in.Operation)
+
+# Dimensions of datasets
+
+dim(almonds.CC)
+
+dim(almonds.numeric)
+
+# Head
+
+head(almonds.CC)
+
+head(almonds.numeric)
+
+# Summary
+
+summary(almonds.CC)
+summary(almonds.CC$Regions)
+summary(almonds.CC$Role.in.Operation)
+summary(almonds.CC$Age)
+summary(almonds.CC$Total.Yield.Bearing.Acreage)
+summary(almonds.CC$Acre.Ranges)
+summary(almonds.CC$Rental.Price)
+
+summary(almonds.numeric)
+summary(almonds.numeric$Regions)
+summary(almonds.numeric$Total.Yield.Bearing)
+```
+
+**Figure 1** plots the locations of the respondent's almonds orchards by county in Califorina. Because respondents were allowed to "check all that apply," when selecting the counties where their almond orchards are located, some of the location responses in the dataset had several counties listed in one cell. To remedy this, I first created a new column in the dataset Excel spreadsheet called "County.Multiple," then I copied the data from the "County" column into the new column and entered in "multiple" for location responses that contained more than one county. 
+
+Thus, in **Figure 1**, "multiple" is used to describe the respondents who had almond orchards in several counties. This figure shows that a majority of the respondents farm almonds in Stanislaus, Madera, and Fresno. Since a majority of almond producers are from Southern California, I anticipated a higher response rate from these counties.
+
+I then went through the spreadsheet again and noted that in the location responses that had multiple counties listed, the counties were close to one another and therefore, the counties could be categorized by Central Valley watershed basins. I chose to categorize the counties by watersheds provided the fact that the production of tree nuts requires a considerable amount of water, and due to the state's water scarcity, water is a critical factor in determining managerial practices for farmers. Thus, I hypothesized that watershed basins are most representative of respondent behavior toward bee-friendly practices (i.e. cover crop).
+
+The regional categories include Sacramento Valley, Delta, San Joaquin Basin, and Tulare Basin. The Sacramento Valley consists of respondents who farm almonds in Butte, Colusa, Glenn, or Tehama; the Delta region includes Sacramento, Solano, Yolo, and Yuba; the San Joaquin Basin includes San Joaquin, Stanislaus, Merced, and Madera; the Tulare Basin includes Tulare, Kings, Kern, and Fresno. 
+
+
+```{r, location plots, eval = TRUE, echo = FALSE, fig.cap = "Location of Respondents' Almond Orchards by County in California"}
+
+# Figure 1: Location by county
+
+# Drop the row that does not contain any location information in the County.Multiple column 
+
+almonds.CC.dropNAcounty <- almonds.CC %>% drop_na(County.Multiple)
+
+# Plot location of almond orchards by county
+
+OrchardLocation <- ggplot(almonds.CC.dropNAcounty, aes(x = County.Multiple)) + 
+  geom_bar(fill = "#56B4E9") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "County", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(OrchardLocation)
+
+```
+
+\newpage
+
+**Figure 2** plots the location of the respondents' almond orchards by region. We can see from this plot that a majority of the respondents farm almonds in the San Joaquin and Tulare Basins. It is important to note that the northern section of the Central Valley consists of the Sacramento Valley and Delta regions, while the southern section includes the San Joaquin and Tulare Basins. Therefore, a majority of the respondents farm almonds in the southern section of the Central Valley.
+
+```{r,eval = TRUE, echo = FALSE, fig.cap= "Location of Respondents' Almond Orchards by Region"}
+
+# Figure 2: Location by region
+
+# Drop the row that does not contain any location information in the County.Multiple column 
+
+almonds.CC.dropNAregion <- almonds.CC %>% drop_na(Regions)
+
+# Plot location of almond orchards by region using the original almond.CC raw dataset
+
+OrchardRegion <- ggplot(almonds.CC.dropNAregion, aes(x = Regions)) + 
+  geom_bar(fill = "blue", width = .5) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Regions", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(OrchardRegion)
+
+
+```
+
+\newpage
+
+**Figure 3** shows the age ranges of the respondents who completed the survey. We can see from this plot that a majority of the respondents fell within the 25-34 and 55-64-year-old age ranges. These age ranges are interesting to note because the responses for cover crop adoption will be come from both the newer and older farming generations.
+
+
+```{r, respondent age, eval = TRUE, echo = FALSE, fig.cap= "Age Ranges of Respondents"}
+
+Age.plot <- ggplot(almonds.CC, aes(x = Age)) + 
+  geom_bar(fill = "darkgreen", width = .7) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Age", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(Age.plot)
+
+
+```
+
+
+**Figure 4** plots the respondents' roles in almond operations. The respondents could select "Owner, not responsible for dat-to-day management," "Owner/Operator," or "Farm Manager (not owner)." This figure shows that a majority of the respondents selected "Owner/Operator," meaning they own and operate their almond orchard(s). This outcome was the opposite of my hypothesis regarding the roles the survey takers play in day-to-day operations because I assumed that a majority of the farms would consist of several parcels that were operated by farm managers and that farm managers would constitute the majority of survey respondents.
+
+```{r, Role in Operation, eval = TRUE, echo = FALSE, fig.cap= "Respondents' Roles in Almond Operations"}
+
+# Figure 4: plot of Respondents' roles in almond operations
+
+Role.plot <- ggplot(almonds.CC, aes(x = Role.in.Operation)) + 
+  geom_bar(fill = "#D55E00", width = .4) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Role in Operation", y = "Count") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text( face = "bold",size = 10),
+        plot.title = element_text(size = 12))
+
+
+print(Role.plot)
+
+
+```
+
+
+
+\newpage
+
+# Analysis
+
+Analyzing possible factors affecting cover crop adoption among almond producers in California will allow me to obtain a greater insight into barriers that may be preventing producers from adopting cover crop and thus, bee-friendly practices. To assess cover crop adoption, I analyzed whether or not the respondents had grown a cover crop in the last five years. Out of 301 responses, 33.6% (101 respondents) answered "Yes" to having grown a cover crop, while 66.5% (200) selected "No." To understand why respondents may have selected "No" or "Not Sure" when asked whether they had grown a cover crop, I analyzed how responses differed by demographics using logistic regressions and chi-square tests of independence.
+
+When controlling for all factors, we see that respondents who farm almonds in the San Joaquin and Tulare Basins are significantly less likely to grow a cover crop than respondents from the Delta (glm; z = -3.32, p-value < 0.05; glm; z = -3.66, p-value < 0.05). We also see that that total yield-bearing acreage has a signficant affect on whether or not respondents grow cover crop (glm; z = -1.97, p-value < 0.05). Lastly, results indicate that there is a marginally significant liklihood of Owner/Operators selecting "Yes" to having grown cover crop over Farm Managers (glm; z = -1.94, p-value = 0.053). 
+
+
+## Question 1: Which demographic factors affect whether or not respondents have planted cover crop in the last 5 years?
+
+```{r, warning = FALSE, eval= TRUE}
+
+# Number of respondents who have grown and not grown a cover crop grown 
+
+CCtbl <- table(almonds.CC$Cover.Crop.Grown)
+
+CCtbl
+
+# Statistical Test 1: GLM
+
+almonds.CC$Total.Yield.Bearing.Acreage <- 
+  as.numeric(almonds.CC$Total.Yield.Bearing.Acreage)
+
+Grown.CC <- glm(Cover.Crop.Grown ~ as.factor(Regions) + 
+                  as.factor(Role.in.Operation) + as.factor(Age)
+               + Total.Yield.Bearing.Acreage, almonds.CC, family = binomial)
+
+summ(Grown.CC, model.fit = getOption("Grown.CC", TRUE))
+
+
+# Table 1
+
+pretty_GrownCC.glm <- prettify(summary(Grown.CC))
+
+kable(pretty_GrownCC.glm,caption = "Cover Crop Adoption by Respondent Demographics", 
+      align = c("l", rep("r", 3)),format = "latex", booktabs = TRUE)  %>%
+  kable_styling(latex_options = "scale_down")
+
+
+```
+
+
+## Question 2: How does the respondent's role in the operation affect whether or not they have grown cover crop in the last 5 years?
+
+To analyze how the respondent's "role in operation" affects whether or not they have grown a cover crop, I first made a plot to visualize the number of farm managers, owners, and owner/operators who have and have not grown cover crop in the last five years. **Figure 5** illustrates that the majority of respondents owned and operated their almond operation, and a majority of them have not grown cover crop. 
+
+
+```{r}
+alm.Role= almonds.CC[almonds.CC$Role.in.Operation != " " ,]
+```
+
+\FloatBarrier
+
+```{r, Question 2 Plot, eval = TRUE, echo = FALSE, fig.cap= "Respondents' Roles in Almond Operations by Cover Crop Grown" }
+
+# Plot: Role in Operation by CC Grown 
+
+## Create dataframe to add 'frequency'
+role.count.CC <- data.frame(table(data.frame(alm.Role$Role.in.Operation, alm.Role$Cover.Crop.Grown)))
+
+role.count.CC
+
+colnames(role.count.CC) <- c("Role.in.Operation", "Cover.Crop.Grown", "Freq")
+
+# Plot
+
+Role.Grown.CC.plot <- ggplot(role.count.CC, aes(x = Role.in.Operation, y = Freq, fill = Cover.Crop.Grown)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", size = 10)) +
+  scale_fill_manual(values = c("darkblue", "#009E73")) +
+  labs(x = "Role in Operation", y = "Count", fill = "Grown Cover Crop") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 12), legend.title = element_text(size = 12))
+
+print(Role.Grown.CC.plot)
+```
+
+\FloatBarrier
+
+I then performed a chi-square test of independence to examine the relationship between "role in operation" and whether or not a respondent grew a cover crop. I found that the two variables are independent - a respondent's "role in operation" does not significantly affect whether or not they had grown cover crop in the last five years (X^2(2, N = 301) = 2.21, p > 0.05).
+
+```{r, Question 2}
+
+# Statistical Test 1: Chi-square
+
+almonds.numeric$Role.in.Operation <- as.factor(almonds.numeric$Role.in.Operation)
+almonds.numeric$Cover.Crop.Grown <- as.factor(almonds.numeric$Cover.Crop.Grown)
+
+
+
+Role.Grown.CC.tbl = table(almonds.numeric$Role.in.Operatio, 
+                          almonds.numeric$Cover.Crop.Grown) 
+Role.Grown.CC.tbl
+
+chisq.test(Role.Grown.CC.tbl)
+
+
+```
+
+
+## Question 3: How does the respondent's age affect whether or not they have grown cover crop in the last 5 years?
+
+I first plotted the age of respondents by whether or not they have grown a cover crop to visualize the relationship between the two variables. Graph "a" in **Figure 6** shows that respondents between 55-64-years-old had the highest frequency of growing cover crop in the last five years, while respondents between 25-34-years-old had the highest frequency of **not** growing cover crop in the last five years. The higher rate of respondents between 25-34-years-old not having grown cover crop may be due to the fact that they have just purchased the almond orchards or are farm managers, whereas the older generation has most likely been farming for a longer period of time. However, I hypothesize that a greater number of respondents between 25-34-years-old would be interested in growing cover crop than older respondents.
+
+```{r, age plot 1, echo = FALSE, fig.cap = "Respondent's Age by Cover Crop Grown", out.width = '90%'}
+
+# Plot 1: Age by Cover Crop Grown
+
+## Create dataframe to add 'frequency'
+
+almAge= almonds.CC[almonds.CC$Age != " " ,]
+
+age.GrownCC <- data.frame(table(data.frame(almAge$Age, almAge$Cover.Crop.Grown)))
+
+age.GrownCC
+
+colnames(age.GrownCC) <- c("Age", "Cover.Crop.Grown", "Freq")
+
+# Plot
+
+Age.GrownCC.plot <- ggplot(age.GrownCC, aes(x = Age, y = Freq, fill = Cover.Crop.Grown)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0, 60) +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Age", y = "Count", fill = "Grown Cover Crop") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 7), legend.title = element_text(size = 8))
+#print(Age.GrownCC.plot)
+
+```
+
+To test my hypothesis that respondents between 24-35-years-old are more interested in planting cover crop than the older respondents, I plotted the age of the respondents by their *interest* in growing cover crop. It is important to note that the question regarding *interest* in growing cover crop only appeared for those who selected *no* to having grown cover crop in the last 5 years. Thus, the total count in this analysis is lower than that of the cover crop *grown* analysis. Out of the respondents who have not grown cover crop, graph "b" in **Figure 6** shows that my hypothesis was correct and that more respondents from the 25-34 age bracket are interested in planting cover crop than the older respondents. 
+
+```{r, Age plot 2, echo = FALSE, fig.cap = "Respondent's Age by Cover Crop Interest", out.width = '90%'}
+
+# Plot 2: Age by Cover Crop Interest
+
+## Create dataframe to add 'frequency'
+
+alm = almonds.CC[almonds.CC$Age != " ", ]
+
+age.InterestCC <- data.frame(table(data.frame(alm$Age, alm$Cover.Crop.Interest)))
+
+age.InterestCC[age.InterestCC == ""] <- NA
+
+age.InterestCC <- age.InterestCC[complete.cases(age.InterestCC), ]
+
+age.InterestCC 
+
+colnames(age.InterestCC) <- c("Age", "Cover.Crop.Interest", "Freq")
+
+# Plot
+
+Age.InterestCC.plot <- ggplot(age.InterestCC, aes(x = Age, y = Freq, fill = Cover.Crop.Interest)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0,23) +
+  scale_fill_manual(values = c("red", "#E69F00" , "blue")) +
+  labs(x = "Age", y = "Count", fill = "Interest in Growing Cover Crop") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 7), legend.title = element_text(size = 8))
+#print(Age.InterestCC.plot)
+```
+
+
+
+```{r, combined age graphs, fig.cap = "Respondent's Age by Cover Crop Grown and Cover Crop Interest", out.width = '90%' }
+# Create cowplot
+
+CC.Age.plots <- plot_grid(Age.GrownCC.plot, Age.InterestCC.plot, scale = 0.9,
+                          align = "v", ncol = 1, 
+                          labels = c('a) Cover Crop Grown', 'b) Cover Crop Interest'), 
+                          label_x = 0, label_y = 0,
+  hjust = -0.0, vjust = -0.0, label_size = 8)
+
+print(CC.Age.plots) 
+```
+
+\FloatBarrier
+
+I ran a logistic regression to examine the relationship between the age of the respondents and whether or not they had grown a cover crop in the last five years. The model showed that the relationship between the two variables is not significant - age does not affect whether or not a cover crop was grown (glm; p-value > 0.05). I then ran a chi-square test of independence to anaylze this relationship further, and the analysis confirmed that the two variables are independent of one another (X^2(7, N = 301) = 8.14, p > 0.05).
+
+```{r, Question 3, warning = FALSE}
+
+# Statistical Test 1: GLM
+Age.Grown.CC <- glm(Cover.Crop.Grown~Age, almonds.CC, family = binomial)
+
+#summary(Age.Grown.CC)
+
+summ(Age.Grown.CC)
+
+
+# Table 2
+
+pretty_Age.GrownCC.glm <- prettify(summary(Age.Grown.CC))
+
+kable(pretty_Age.GrownCC.glm,caption = "Cover Crop Adoption by Age Ranges of Respondents", 
+      align = c("l", rep("r", 3)),format = "latex", booktabs = TRUE)  %>%
+  kable_styling(latex_options = "scale_down")
+
+```
+
+\FloatBarrier
+
+```{r, Question 3.1, warning = FALSE}
+
+# Statistical Test 2: Chi-Square
+
+Age.Grown.CC.tbl = table(almonds.CC$Age, almonds.CC$Cover.Crop.Grown) 
+Age.Grown.CC.tbl
+
+chisq.test(Age.Grown.CC.tbl)
+
+```
+
+\FloatBarrier
+
+## Question 4: How does the size of the respondent's almond operation affect whether or not they have grown cover crop in the last 5 years?
+
+To assess the effect "size of operation" has on cover crop adoption, I used the numeric responses from the "total yield-bearing acreage" text entry boxes in the survey. I analyzed the responses for "total yield-bearing acreage" rather than "total non-yield bearing acreage" because the non-yield bearing trees are not mature enough for pollination from managed honey bees. Thus, I assumed that non-yield bearing acreage would be less representative of respondents' behaviors toward adopting bee-friendly practices. 
+
+I then categorized the individual text entries for "total yield-bearing acreage" by "Small," "Medium," and "Large" to represent the size of the operation. The acreage range within each category was determined by the ALmond Board's almond acre ranges for farm sizes. The "Small" category represented producers with 0-40 acres of yield-bearing almonds, "Medium" represented producers with 41-200 acres and "Large" represented producers with 201+ acres. 
+
+To visualize the relationship between the size of the respondent's almond operation and whether or not they have grown cover crop, I plotted the two variables. **Figure 7** shows that "Small" operations had the highest frequency of **not** growing cover crop in the last five years. 
+
+```{r }
+
+alm.Size = almonds.CC[almonds.CC$Acre.Ranges != " " ,]
+
+```
+
+```{r, Size plot,  echo = FALSE, fig.cap = "Size of Operation by Cover Crop Interest", out.width = '90%' }
+
+## Create dataframe to add 'frequency'
+
+Size.CCgrown <- data.frame(table(data.frame(alm.Size$Acre.Ranges, alm.Size$Cover.Crop.Grown)))
+
+
+Size.CCgrown [Size.CCgrown  == ""] <- NA
+
+Size.CCgrown  <- Size.CCgrown [complete.cases(Size.CCgrown ), ]
+
+Size.CCgrown 
+
+colnames(Size.CCgrown) <- c("Acre.Ranges", "Cover.Crop.Grown", "Freq")
+
+# Plot 
+
+FarmSize.GrownCC.plot <- 
+  ggplot(Size.CCgrown, aes(x = Acre.Ranges, y = Freq, fill = Cover.Crop.Grown)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(palette = "Set1") +
+  labs(x = "Farm Size", y = "Count", fill = "Cover Crop Grown") +
+  theme(legend.position = "right", 
+        legend.text = element_text(size = 7), legend.title = element_text(size = 8))
+print(FarmSize.GrownCC.plot)
+
+
+```
+
+\FloatBarrier
+
+Further analysis showed that, unlike the model from **Question 1** that controlled for all factors, when solely analyzing cover crop adoption versus the amount of total yield-bearing acreage, total yield-bearing acreage does not significantly affect whether the respondent has grown a cover crop in the last five years (glm; p-value > 0.05).
+
+```{r, Question 4}
+
+Size.GrownCC <- glm(Cover.Crop.Grown~Acre.Ranges , almonds.CC, family = binomial)
+
+#summary(Size.GrownCC)
+
+summ(Size.GrownCC)
+
+
+# Table 3
+
+pretty_Size.GrownCC.glm <- prettify(summary(Size.GrownCC))
+
+kable(pretty_Size.GrownCC.glm,caption = "Cover Crop Adoption by Size of Almond Operation", 
+      align = c("l", rep("r", 3)),format = "latex", booktabs = TRUE)  %>%
+  kable_styling(latex_options = "scale_down")
+
+```
+
+\FloatBarrier
+
+## Question 5: How does the region where the respondent's farm almonds affect whether or not they have grown cover crop in the last 5 years?
+
+I performed a chi-square test of independence to examine the relationship between “region” and whether or not respondents have grown a cover crop in the last five years. The relationship between these variables is significant, showing that “region” does affect whether or not respondents selected “Yes” to having grown a cover crop (x2(3, N = 301) = 24.205, p < 0.01). I then ran a logistic regression to see which regions are most likely to affect whether or not the respondent has grown a cover crop. The model showed that respondents with almond acreage located in the San Joaquin and Tulare basins were significantly less likely to have grown a cover crop in the last five years than respondents in the Delta region  (glm; z = -3.31, p-value < 0.05; glm; z = -3.48, p-value < 0.05).
+
+```{r, Question 5}
+
+# Statistical Test 1: Chi-square 
+almonds.CC$Regions <- as.factor(almonds.CC$Regions)
+
+Region.GrownCC.tbl = table(almonds.CC$Regions, almonds.CC$Cover.Crop.Grown) 
+Region.GrownCC.tbl
+
+chisq.test(Region.GrownCC.tbl)
+
+
+# Statistical Test 2: GLM
+
+Regions.GrownCC.glm <- glm(Cover.Crop.Grown ~  Regions, 
+                             data = almonds.CC, family = binomial )
+
+#summary(Regions.GrownCC.glm)
+
+summ(Regions.GrownCC.glm)
+
+# Table 4
+
+pretty_Region.GrownCC <- prettify(summary(Regions.GrownCC.glm))
+
+kable(pretty_Region.GrownCC,caption = "Cover Crop Adoption by Region", 
+      align = c("l", rep("r", 3)),format = "latex", booktabs = TRUE)  %>%
+  kable_styling(latex_options = "scale_down")
+
+
+```
+
+
+\newpage
+
+# Summary and Conclusions
+
+When controlling for all factors that potentially affect cover crop adoption, the analyses show that only "Region" and "Total Yield-Bearing Acreage" have a significant relationship regarding whether or not respondents selected "Yes" to having grown cover crop in the last 5 years. However, when the factors are analyzed individually against "cover crop adoption," the models indicate that only "Region" is significant. Upon further analysis, the results also showed that respondents who farm almonds in the San Joaquin and Tulare Basins were significantly less likely to select "Yes" to having grown cover crop than respondents in the more northern regions of the Sacramento Valley and Delta. One explanation for this could be due to water availability and price. The northern regions in California have a greater supply of water than those farther south and given the considerable amount of water used to grow tree crops, it could be that farmers in the southern regions are more apprehensive about planting cover crops due to the extra water they necessitate. This being said, cover crops improve soil health and the soil's water retention capabilities, so by planting cover crop, the farmers could enhance their irrigation efficiency.
+
+Cover crop is just one of several bee-friendly practices that almond producers can adopt on their orchards. However, it is an important practice as it provides managed honey bees with extra and more diverse nutrient and pollen sources. By planting a cover crop, producers could not only improve their soil health but could also strengthen the bee colonies and obtain better pollination of their almond orchards. As the demand for almonds continues to increase, more acres of farmland will transition to almond orchards, and without higher rates of adoption of bee-friendly practices or a shift in consumer mindset, a continued loss of managed honey bees in the US appears inevitable. Thus, given the results from these analyses, industry experts, cost-share programs, and farm extension agents should work with producers in the southern region of the state to assist them in funding and educational opportunities that increase the rates of cover crop adoption. 
+
+
+\newpage
+
+# References
+
+* United States Department of Agriculture (USDA). (2019). 2018 California Almond Acreage Report. California Department of Food and Agriculture. Retrieved from https://www.nass.usda.gov/Statistics_by_State/California/Publications/Specialty_and_Other_Releases/Almond/Acreage/201904almac.pdf
+
+* Almond Board of California (ABC). (2019b). Almond Almanac. Almond Board of California. Retrieved from http://newsroom.almonds.com/sites/default/files/pdf_file/Almanac_2019_Web.pdf
